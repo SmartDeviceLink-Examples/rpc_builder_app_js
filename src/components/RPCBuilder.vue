@@ -1,7 +1,7 @@
 <template>
 	<div class="header">
 
-        <h2>SDL Proxy Tester</h2>
+        <h2>RPC Builder JS</h2>
 
         <div class="headerRight">
             <button id="createRPC" v-on:click="openModal">Create RPC</button>

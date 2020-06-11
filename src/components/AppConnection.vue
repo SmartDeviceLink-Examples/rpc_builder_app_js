@@ -3,8 +3,8 @@
         <modal name="app-config" id="connect" height="auto" @before-open="beforeOpen" @before-close="beforeClose" @opened="opened" :clickToClose="false">
             <div class="paramContainer">
                 <h3>Configure Application</h3>
-                <div class="parameter"><label for="id">Application ID</label><input type="text" id="id" value="sdlpt-js"/></div>
-                <div class="parameter"><label for="name">Application Name</label><input type="text" id="name" value="SDLPT"/></div>
+                <div class="parameter"><label for="id">Application ID</label><input type="text" id="id" value="rpcb-js"/></div>
+                <div class="parameter"><label for="name">Application Name</label><input type="text" id="name" value="RPC Builder"/></div>
                 <div class="parameter"><label for="types">App HMI Types</label><select id="types"/></div>
                 <div class="parameter"><label for="wsUrl">WS URL</label><input type="text" id="wsUrl" value="ws://"/></div>
                 <div class="parameter"><label for="wsPort">WS Port</label><input type="text" id="wsPort" value="2020"/></div>

@@ -2,7 +2,7 @@
 	<div class="logger">
 		<div class="logControls">
 			<input type="text" id="logFilter" placeholder="filter logs" v-on:change="filter"/>
-			<button v-on:click="clearLogs">CLEAR LOGS</button>
+			<button v-on:click="clearLogs">Clear Logs</button>
 		</div>
 		<div class="logContainer" id="logContainer" v-on:scroll="onScroll">
 

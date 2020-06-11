@@ -1,12 +1,12 @@
-# RPC Builder JS (SDLPT)
+# RPC Builder JS
 
-SDLPT (SDL proxy tester) is a web application that can dynamically create RPCs and interact with SDL Core. This is useful for testing SDL implementations.
+RPC Builder JS is a web application that can dynamically create RPCs and interact with SDL Core. This is useful for testing SDL implementations.
 
 ## Dependencies
 
-SDLPT is built using [node](https://nodejs.org/) version 12 and [expressJS](https://expressjs.com/).
+RPC Builder JS is built using [node](https://nodejs.org/) version 12 and [expressJS](https://expressjs.com/).
 
-SDLPT is built on top of the [sdl_javascript_suite](https://github.com/smartdevicelink/sdl_javascript_suite) and includes SDL.min.js from [release 1.0.0](https://github.com/smartdevicelink/sdl_javascript_suite/tree/1.0.0).
+RPC Builder JS is built on top of the [sdl_javascript_suite](https://github.com/smartdevicelink/sdl_javascript_suite) and includes SDL.min.js from [release 1.0.0](https://github.com/smartdevicelink/sdl_javascript_suite/tree/1.0.0).
 
 ## Installation
 
