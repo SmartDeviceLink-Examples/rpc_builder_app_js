@@ -1,6 +1,6 @@
 <template>
 	<div id="hidden">
-        <modal name="app-config" id="connect" height="auto" @before-open="beforeOpen" @before-close="beforeClose" @opened="opened" :clickToClose="false">
+        <modal name="app-config" id="connect" height="auto" @before-close="beforeClose" @opened="opened" :clickToClose="false">
             <div class="paramContainer">
                 <h3>Configure Application</h3>
                 <div class="parameter"><label for="id">Application ID</label><input type="text" id="id" value="rpcb-js"/></div>

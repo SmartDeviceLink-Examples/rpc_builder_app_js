@@ -5,7 +5,7 @@
 
         <div class="headerRight">
             <button id="createRPC" v-on:click="openModal">Create RPC</button>
-            <modal name="rpc" id="connect" height="auto" @before-open="beforeOpen" @before-close="beforeClose" @opened="opened" :clickToClose="false">
+            <modal name="rpc" id="connect" height="auto" @opened="opened" :clickToClose="false">
                 <div class="paramContainer" id="container">
                     <h3>Configure RPC</h3>
                     <div class="parameter" id="select">
@@ -15,8 +15,8 @@
                         <datalist id="rpcs"></datalist>
                     </div>
                     <div class="buttons">
-                        <button id="cancel" v-on:click="closeModal">CANCEL</button>
-                        <button id="send" v-on:click="sendRpc">SEND</button>
+                        <button id="cancel" v-on:click="closeModal">Cancel</button>
+                        <button id="send" v-on:click="sendRpc">Send</button>
                     </div>
                 </div>
             </modal>
