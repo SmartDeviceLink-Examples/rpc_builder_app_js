@@ -1,24 +1,29 @@
-# vueapp
+# RPC Builder JS (SDLPT)
 
-## Project setup
-```
+SDLPT (SDL proxy tester) is a web application that can dynamically create RPCs and interact with SDL Core. This is useful for testing SDL implementations.
+
+## Dependencies
+
+SDLPT is built using [node](https://nodejs.org/) version 12 and [expressJS](https://expressjs.com/).
+
+SDLPT is built on top of the [sdl_javascript_suite](https://github.com/smartdevicelink/sdl_javascript_suite) and includes SDL.min.js from [release 1.0.0](https://github.com/smartdevicelink/sdl_javascript_suite/tree/1.0.0).
+
+## Installation
+
+```bash
+git clone https://github.com/SmartDeviceLink-Examples/rpc_builder_app_js
+cd rpc_builder_app_js
 npm install
 ```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
+## Usage
+
+```bash
+cd rpc_builder_app_js
+node index.js
 ```
 
-### Compiles and minifies for production
-```
-npm run build
-```
+Navigate to `$HOST:3002` in your browser to access the web app.
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Contributing
+Contributions are welcome but to prevent duplicate efforts please open an issue to discuss any potential changes before developing them.
