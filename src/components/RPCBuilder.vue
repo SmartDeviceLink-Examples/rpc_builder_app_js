@@ -53,6 +53,7 @@ export default {
             option.text = type;
             select.appendChild(option);
         }
+        document.querySelector('input#irpcs').focus();
     },
     selected () {
         this.rpcName = document.querySelector('input#irpcs').value;
@@ -96,14 +97,23 @@ export default {
         // if params dont meet constraints, popup a confirm before sending
     },
     sendRpc () {
+        var bulkData = undefined;
+
         var parameters = {};
         for (var param of this.params) {
             if (param.included()) {
                 parameters[param._name] = param.value();
+            } else if (param._name === 'bulkData') {
+                bulkData = param.value();
             }
         }
 
         const rpc = new document.SDL.rpc.messages[this.rpcName]({ parameters: parameters });
+
+        if (bulkData) {
+            rpc.setBulkData(bulkData);
+        }
+
         document.sdlManager.sendRpc(rpc);
         this.closeModal();
     }
@@ -158,8 +168,8 @@ export default {
         align-items: center;
         justify-content: center;
 
-        padding-left: 15%;
-        padding-right: 15%;
+        padding-left: 5%;
+        padding-right: 5%;
     }
 
     .parameter {

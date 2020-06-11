@@ -69,10 +69,18 @@ body h3 {
     font-family: "LivioNorm-Medium", Times, serif;
 }
 
+body button {
+    font-family: "LivioNorm-Medium", Times, serif;
+}
+
 body {
     width: 100vw;
     height: 100vh;
     margin: 0;
+}
+
+body input[type=checkbox] {
+    height: 18px;
 }
 
 </style>

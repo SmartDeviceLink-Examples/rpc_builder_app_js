@@ -30,7 +30,7 @@ class Parameter {
         this.pDiv.appendChild(includedCheckbox);
 
         var paramName = document.createElement('p');
-        paramName.setAttribute('style', 'flex: 8; flex-shrink: 3');
+        paramName.setAttribute('style', 'flex: 8;');
         paramName.innerHTML = this._name;
         this.pDiv.appendChild(paramName);
 
@@ -349,6 +349,57 @@ class ImageParameter extends StructParameter {
     }
 }
 
+class FileParameter extends Parameter {
+    constructor(name, mandatory) {
+        super(name, mandatory);
+    }
+
+    value = function() {
+        return document.putFileData;
+    }
+
+    included = function() {
+        return false;
+    }
+
+    html = function() {
+        var div = this.base_html();
+
+        div.children[1].setAttribute('style', 'flex: 4;');
+        
+        var input = document.createElement('input');
+        input.setAttribute('style', 'flex: 8;');
+        input.setAttribute('type', 'file');
+
+        input.onchange = function() {
+            if (!this || !this.files || !this.files[0]) {
+                return;
+            }
+
+            // should keep flag so rpc send can't be pressed before file is uploaded
+            let fileReader = new FileReader();
+
+            fileReader.onload = (event) => {
+                var b64data = event.target.result;
+                var characters = atob(b64data.substring(b64data.indexOf(",") + 1));
+
+                const numbers = new Array(characters.length);
+                for (let i = 0; i < characters.length; i++) {
+                    numbers[i] = characters.charCodeAt(i);
+                }
+
+                document.putFileData = new Uint8Array(numbers);
+            }
+
+            fileReader.readAsDataURL(this.files[0]);
+        }
+
+        div.appendChild(input);
+
+        return div;
+    }
+}
+
 class ArrayParameter extends Parameter {
     constructor(name, mandatory, param, minSize, maxSize) {
         super(name, mandatory);
@@ -460,6 +511,10 @@ function createParam(param) {
     }
     else if (param.type in document.apiSpec.structs) {
         return new StructParameter(param.name, param.mandatory, param.type);
+    }
+
+    if (param.name === 'bulkData') {
+        return new FileParameter(param.name, param.mandatory);
     }
     
     return new Parameter(param.name, param.mandatory);

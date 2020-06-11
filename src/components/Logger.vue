@@ -25,7 +25,7 @@ export default {
 			if (rpc && containerRef) {
 				var log = document.createElement('p');
 				if (rpc._messageType === 1 && rpc._parameters && !rpc._parameters.success) {
-					log.setAttribute('style', 'color: #65A0FF;');
+					log.setAttribute('style', 'color: #C0002F;');
 				}
 				log.innerHTML = `<strong>${rpc._functionName}</strong><span class="logParams">${JSON.stringify(rpc._parameters)}</span>`;
 				containerRef.appendChild(log);
@@ -39,12 +39,7 @@ export default {
 	methods: {
 		onScroll () {
 			var containerRef = document.querySelector('div#logContainer');
-			var temp = this.keepUpWithHistory;
 			this.keepUpWithHistory = (containerRef.scrollTop + window.innerHeight * 0.95) >= containerRef.scrollHeight;
-
-			if (temp != this.keepUpWithHistory) {
-				console.log('this.keepUpWithHistory ->', this.keepUpWithHistory)
-			}
 		},
 		clearLogs () {
 			var containerRef = document.querySelector('div#logContainer');
@@ -57,8 +52,6 @@ export default {
 			var filterRef = document.querySelector('input#logFilter');
 			var filterVal = filterRef.value;
 
-			console.log('filterVal', filterVal);
-
 			for (var child of containerRef.childNodes) {
 				if (filterVal === '') {
 					child.setAttribute('style', `display: ''`);
@@ -66,7 +59,6 @@ export default {
 				}
 
 				var rpcName = child.childNodes[0].innerHTML;
-				console.log('RPC: ', rpcName);
 				if (rpcName.includes(filterVal)) {
 					child.setAttribute('style', `display: ''`);
 					continue;
@@ -103,7 +95,7 @@ export default {
 }
 
 .logContainer p:nth-child(2n) {
-	background-color: #5080CC;
+	background-color: #65A0FF;
 }
 
 .logContainer p {

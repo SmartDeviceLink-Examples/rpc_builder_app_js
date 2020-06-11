@@ -56,6 +56,13 @@ export default {
             }
 
             xml2json((new DOMParser()).parseFromString(xml, "text/xml"));
+
+            // exception for param not in spec
+            document.apiSpec.functions.PutFile.push({
+                name: 'bulkData',
+                mandatory: 'true'
+            });
+
             console.log(`api spec ${remote}/${branch} has been loaded`);
             that.openModal();
         });
