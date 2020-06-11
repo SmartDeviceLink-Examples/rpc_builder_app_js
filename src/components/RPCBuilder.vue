@@ -36,9 +36,6 @@ export default {
         params: []
     };
   },
-  created: function() {
-      // do stuffs when this is created
-  },
   methods: {
     openModal () {
         this.$modal.show('rpc');
@@ -88,13 +85,6 @@ export default {
     },
     hideModal () {
       this.$modal.hide('rpc');
-    },
-    beforeOpen (/*event*/) {
-        //console.log('event:', event);
-    },
-    beforeClose (/*event*/) {
-        // if this was not called by button, cancel event, otherwise, verify params
-        // if params dont meet constraints, popup a confirm before sending
     },
     sendRpc () {
         var bulkData = undefined;
@@ -162,75 +152,75 @@ export default {
 </style>
 
 <style scoped>
-    .paramContainer {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+.paramContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 
-        padding-left: 5%;
-        padding-right: 5%;
-    }
+    padding-left: 5%;
+    padding-right: 5%;
+}
 
-    .parameter {
-        flex: 1;
-        width: 50%;
-        margin-bottom: 1%;
-    }
+.parameter {
+    flex: 1;
+    width: 50%;
+    margin-bottom: 1%;
+}
 
-    .parameter input {
-        width: 100%;
-    }
+.parameter input {
+    width: 100%;
+}
 
-    .parameter select {
-        width: 100%;
-    }
+.parameter select {
+    width: 100%;
+}
 
-    button {
-        margin-top: 2%;
-        margin-bottom: 2%;
-    }
+button {
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
 
-    label {
-        display: block;
-    }
+label {
+    display: block;
+}
 
-    input {
-        display: block;
-    }
+input {
+    display: block;
+}
 
-    .header {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
+.header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 
-        height: 10%;
-        padding: 0 10%;
-    }
+    height: 10%;
+    padding: 0 10%;
+}
 
-    .headerRight {
-        margin-left: auto;
-        padding: 10px;
-    }
+.headerRight {
+    margin-left: auto;
+    padding: 10px;
+}
 
-    .buttons {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
+.buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 
-        height: 24px;
-        margin-bottom: 2%;
-    }
+    height: 24px;
+    margin-bottom: 2%;
+}
 
-    .buttons button {
-        height: 20px;
-        width: 60px;
+.buttons button {
+    height: 20px;
+    width: 60px;
 
-        margin: auto;
-        margin-left: 2%;
-        margin-right: 2%;
-    }
+    margin: auto;
+    margin-left: 2%;
+    margin-right: 2%;
+}
 
 </style>

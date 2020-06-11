@@ -8,7 +8,7 @@
                 <div class="parameter"><label for="types">App HMI Types</label><select id="types"/></div>
                 <div class="parameter"><label for="wsUrl">WS URL</label><input type="text" id="wsUrl" value="ws://"/></div>
                 <div class="parameter"><label for="wsPort">WS Port</label><input type="text" id="wsPort" value="2020"/></div>
-                <button id="connect" v-on:click="closeModal()">CONNECT</button>
+                <button id="connect" v-on:click="closeModal">CONNECT</button>
             </div>
         </modal>
 	</div>
@@ -84,9 +84,6 @@ export default {
     },
     hideModal () {
       this.$modal.hide('app-config');
-    },
-    beforeOpen (/*event*/) {
-        //console.log('event:', event);
     },
     beforeClose (event) {
         var appId = document.querySelector('input#id').value;
@@ -164,43 +161,43 @@ export default {
 
 <style scoped>
 
-    .hidden {
-        height: 0;
-        width: 0;
-    }
+.hidden {
+    height: 0;
+    width: 0;
+}
 
-    .paramContainer {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
+.paramContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 
-    .parameter {
-        flex: 1;
-        width: 50%;
-        margin-bottom: 1%;
-    }
+.parameter {
+    flex: 1;
+    width: 50%;
+    margin-bottom: 1%;
+}
 
-    .parameter input {
-        width: 100%;
-    }
+.parameter input {
+    width: 100%;
+}
 
-    .parameter select {
-        width: 100%;
-    }
+.parameter select {
+    width: 100%;
+}
 
-    button {
-        margin-top: 2%;
-        margin-bottom: 2%;
-    }
+button {
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
 
-    label {
-        display: block;
-    }
+label {
+    display: block;
+}
 
-    input {
-        display: block;
-    }
+input {
+    display: block;
+}
 
 </style>
