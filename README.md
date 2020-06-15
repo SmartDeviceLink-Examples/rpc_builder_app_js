@@ -23,7 +23,7 @@ cd rpc_builder_app_js
 npm run serve
 ```
 
-Navigate to `$HOST:3002` in your browser to access the web app.
+Navigate to `$HOST:8080` in your browser to access the web app.
 
 ## Contributing
 Contributions are welcome but to prevent duplicate efforts please open an issue to discuss any potential changes before developing them.
