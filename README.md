@@ -4,7 +4,7 @@ RPC Builder JS is a web application that can dynamically create RPCs and interac
 
 ## Dependencies
 
-RPC Builder JS is built using [node](https://nodejs.org/) version 12 and [expressJS](https://expressjs.com/).
+RPC Builder JS is built using [node](https://nodejs.org/) version 12 and vueJS.
 
 RPC Builder JS is built on top of the [sdl_javascript_suite](https://github.com/smartdevicelink/sdl_javascript_suite) and includes SDL.min.js from [release 1.0.0](https://github.com/smartdevicelink/sdl_javascript_suite/tree/1.0.0).
 
@@ -20,7 +20,7 @@ npm install
 
 ```bash
 cd rpc_builder_app_js
-node index.js
+npm run serve
 ```
 
 Navigate to `$HOST:3002` in your browser to access the web app.
