@@ -15,8 +15,7 @@ class Parameter {
 
     base_html = function() {
         this.pDiv = document.createElement('div');
-        this.pDiv.setAttribute('class', 'parameter');
-        this.pDiv.setAttribute('style', 'height: 24px;')
+        this.pDiv.setAttribute('class', 'rpcParam');
 
         var includedCheckbox = document.createElement('input');
         includedCheckbox.setAttribute('style', 'flex: 2;');
@@ -31,7 +30,7 @@ class Parameter {
         this.pDiv.appendChild(includedCheckbox);
 
         var paramName = document.createElement('p');
-        paramName.setAttribute('style', 'flex: 8; flex-shrink: 3');
+        paramName.setAttribute('style', 'flex: 8;');
         paramName.innerHTML = this._name;
         this.pDiv.appendChild(paramName);
 
@@ -221,11 +220,10 @@ class StructParameter extends Parameter {
 
     base_html = function() {
         this.pDiv = document.createElement('div');
-        this.pDiv.setAttribute('class', 'parameter');
-        this.pDiv.setAttribute('style', 'display: flex; flex-direction: column; width: 100%;');
+        this.pDiv.setAttribute('class', 'rpcParamContainer');
 
         var headerDiv = document.createElement('div');
-        headerDiv.setAttribute('style', 'display: flex; flex-direction: row; align-items: center; width: 100%;');
+        headerDiv.setAttribute('class', 'rpcParamChild');
 
         var includedCheckbox = document.createElement('input');
         includedCheckbox.setAttribute('style', 'flex: 2;');
@@ -255,7 +253,7 @@ class StructParameter extends Parameter {
         this.pDiv.appendChild(headerDiv);
 
         var sDiv = document.createElement('div');
-        sDiv.setAttribute('class', 'structParameter');
+        sDiv.setAttribute('class', 'rpcParamContainer');
 
         if (this._collapsed) {
             sDiv.setAttribute('style', 'display: none;');
@@ -351,6 +349,57 @@ class ImageParameter extends StructParameter {
     }
 }
 
+class FileParameter extends Parameter {
+    constructor(name, mandatory) {
+        super(name, mandatory);
+    }
+
+    value = function() {
+        return document.putFileData;
+    }
+
+    included = function() {
+        return false;
+    }
+
+    html = function() {
+        var div = this.base_html();
+
+        div.children[1].setAttribute('style', 'flex: 4;');
+        
+        var input = document.createElement('input');
+        input.setAttribute('style', 'flex: 8;');
+        input.setAttribute('type', 'file');
+
+        input.onchange = function() {
+            if (!this || !this.files || !this.files[0]) {
+                return;
+            }
+
+            // should keep flag so rpc send can't be pressed before file is uploaded
+            let fileReader = new FileReader();
+
+            fileReader.onload = (event) => {
+                var b64data = event.target.result;
+                var characters = atob(b64data.substring(b64data.indexOf(",") + 1));
+
+                const numbers = new Array(characters.length);
+                for (let i = 0; i < characters.length; i++) {
+                    numbers[i] = characters.charCodeAt(i);
+                }
+
+                document.putFileData = new Uint8Array(numbers);
+            }
+
+            fileReader.readAsDataURL(this.files[0]);
+        }
+
+        div.appendChild(input);
+
+        return div;
+    }
+}
+
 class ArrayParameter extends Parameter {
     constructor(name, mandatory, param, minSize, maxSize) {
         super(name, mandatory);
@@ -382,11 +431,10 @@ class ArrayParameter extends Parameter {
 
     base_html = function() {
         this.pDiv = document.createElement('div');
-        this.pDiv.setAttribute('class', 'parameter');
-        this.pDiv.setAttribute('style', 'display: flex; flex-direction: column; width: 100%;');
+        this.pDiv.setAttribute('class', 'rpcParamContainer');
 
         var headerDiv = document.createElement('div');
-        headerDiv.setAttribute('style', 'display: flex; flex-direction: row; align-items: center; width: 100%;');
+        headerDiv.setAttribute('class', 'rpcParamChild');
 
         var includedCheckbox = document.createElement('input');
         includedCheckbox.setAttribute('style', 'flex: 2;');
@@ -404,7 +452,7 @@ class ArrayParameter extends Parameter {
         paramName.setAttribute('style', 'flex: 8;');
         let limits = '';
         if (this._minSize !== undefined && this._maxSize !== undefined) {
-            limits = ` length (${this._minSize} - ${this._maxSize})`;
+            limits = ` ${this._minSize} - ${this._maxSize} elems`;
         } else if (this._minSize !== undefined) {
             limits = ` minlength ${this._minSize}`;
         } else if (this._maxSize !== undefined) {
@@ -424,7 +472,7 @@ class ArrayParameter extends Parameter {
         this.pDiv.appendChild(headerDiv);
 
         this.sDiv = document.createElement('div');
-        this.sDiv.setAttribute('class', 'structParameter');
+        this.sDiv.setAttribute('class', 'rpcParamContainer');
 
         this.pDiv.appendChild(this.sDiv);
 
@@ -464,8 +512,12 @@ function createParam(param) {
     else if (param.type in document.apiSpec.structs) {
         return new StructParameter(param.name, param.mandatory, param.type);
     }
+
+    if (param.name === 'bulkData') {
+        return new FileParameter(param.name, param.mandatory);
+    }
     
     return new Parameter(param.name, param.mandatory);
 }
 
-export { createParam };
+export default createParam;
