@@ -13,6 +13,10 @@ class Parameter {
         return this._mandatory || this.pDiv.firstChild.checked;
     }
 
+    setIncluded = function(included) {
+        this.pDiv.firstChild.checked = included;
+    }
+
     base_html = function() {
         this.pDiv = document.createElement('div');
         this.pDiv.setAttribute('class', 'rpcParam');
@@ -59,6 +63,10 @@ class BoolParameter extends Parameter {
         return this.pDiv.children[2].checked;
     }
 
+    setValue = function(bool) {
+        this.pDiv.children[2].checked = bool;
+    }
+
     html = function() {
         var div = this.base_html();
 
@@ -82,6 +90,10 @@ class IntParameter extends Parameter {
 
     value = function() {
         return this.pDiv.children[2].valueAsNumber;
+    }
+
+    setValue = function(integer) {
+        this.pDiv.children[2].valueAsNumber = integer;
     }
 
     html = function() {
@@ -116,6 +128,10 @@ class StringParameter extends Parameter {
         return this.pDiv.children[2].value;
     }
 
+    setValue = function(string) {
+        this.pDiv.children[2].value = string;
+    }
+
     html = function() {
         var div = this.base_html();
 
@@ -145,6 +161,10 @@ class EnumParameter extends Parameter {
 
     value = function() {
         return this.pDiv.children[3].value;
+    }
+
+    setValue = function(enumVal) {
+        this.pDiv.children[3].value = enumVal;
     }
 
     html = function() {
@@ -214,8 +234,23 @@ class StructParameter extends Parameter {
         return val;
     }
 
+    setValue = function(object) {
+        for (var param of this._params) {
+            var savedParam = object[param._name];
+            if (savedParam) {
+                param.setValue(savedParam);
+            } else {
+                param.setIncluded(false);
+            }
+        }
+    }
+
     included = function() {
         return this._mandatory || this.pDiv.firstChild.firstChild.checked;
+    }
+
+    setIncluded = function(included) {
+        this.pDiv.firstChild.firstChild.checked = included;
     }
 
     base_html = function() {
@@ -358,6 +393,10 @@ class FileParameter extends Parameter {
         return document.putFileData;
     }
 
+    setValue = function(data) {
+        document.putFileData = new Uint8Array(data);
+    }
+
     included = function() {
         return false;
     }
@@ -406,8 +445,8 @@ class ArrayParameter extends Parameter {
         this._minSize = minSize;
         this._maxSize = maxSize;
 
-        param.array = undefined;
-        this._param = param;
+        this._param = Object.assign({}, param);
+        this._param.array = undefined;
 
         this._array = [];
 
@@ -415,8 +454,10 @@ class ArrayParameter extends Parameter {
     }
 
     addItem = function() {
+        var oldName = this._param.name;
         this._param.name = `${this._name} [${this._array.length}]`;
         var newParam = createParam(this._param);
+        this._param.name = oldName;
         this._array.push(newParam);
         this.sDiv.appendChild(newParam.html());
     }
@@ -425,8 +466,25 @@ class ArrayParameter extends Parameter {
         return this._array.map((param) => param.value())
     }
 
+    setValue = function(array) {
+        var oldName = this._param.name;
+        for (var elem of array) {
+            this._param.name = `${this._name} [${this._array.length}]`;
+            var newParam = createParam(this._param);
+            this._param.name = this._name;
+            this._array.push(newParam);
+            this.sDiv.appendChild(newParam.html());
+            newParam.setValue(elem);
+        }
+        this._param.name = oldName;
+    }
+
     included = function() {
         return this._mandatory || this.pDiv.firstChild.firstChild.checked;
+    }
+
+    setIncluded = function(included) {
+        this.pDiv.firstChild.firstChild.checked = included;
     }
 
     base_html = function() {
