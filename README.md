@@ -2,6 +2,8 @@
 
 RPC Builder JS is a web application that can dynamically create RPCs and interact with SDL Core. This is useful for testing SDL implementations.
 
+<img width="595" alt="rpc_builder_app_js" src="https://user-images.githubusercontent.com/12716076/88192669-ced49900-cc0a-11ea-96ab-6c86bb05c7d1.png">
+
 ## Dependencies
 
 RPC Builder JS is built using [node](https://nodejs.org/) version 12 and vueJS.
