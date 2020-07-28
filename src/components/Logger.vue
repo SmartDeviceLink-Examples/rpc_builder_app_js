@@ -41,6 +41,7 @@ export default {
 				if (rpc._messageType === 1 && rpc._parameters && !rpc._parameters.success) {
 					log.setAttribute('style', 'color: #C0002F;');
 				}
+        
 				log.innerHTML = `<strong>${rpc._functionName}</strong><span class="logParams">${JSON.stringify(rpc._parameters, null, 4)}</span>`;
 				containerRef.appendChild(log);
 
