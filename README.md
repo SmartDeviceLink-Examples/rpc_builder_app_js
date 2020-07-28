@@ -37,5 +37,88 @@ npm run api <branch>
 Replace `<branch>` with the branch of the `rpc_spec` you wish to test against.
 This will change the rpc_builder to use that version of the MOBILE_API and sdl_javascript_suite for testing.
 
+
+### Saved RPCs
+
+RPCs can be saved by double clicking on an RPC in the log!
+RPCs are saved to local webkit storage, but can be exported in JSON format.
+
+Example JSON of some testing RPCs:
+
+```json
+{
+    "rpc": "ListFiles",
+    "parameters": {},
+    "name": "listFiles"
+},
+{
+    "rpc": "SubtleAlert",
+    "parameters": {
+        "alertText1": "hello",
+        "alertText2": "world",
+        "playTone": true,
+        "cancelID": 42
+    },
+    "name": "subtleHelloWorld"
+},
+{
+    "rpc": "SubtleAlert",
+    "parameters": {
+        "alertText1": "hello",
+        "alertText2": "world",
+        "duration": 10000,
+        "playTone": true,
+        "softButtons": [
+            {
+                "type": "IMAGE",
+                "softButtonID": 51,
+                "text": "sb1",
+                "image": {
+                    "value": "0x25",
+                    "imageType": "STATIC",
+                    "isTemplate": true
+                },
+                "isHighlighted": true,
+                "systemAction": "DEFAULT_ACTION"
+            },
+            {
+                "type": "IMAGE",
+                "softButtonID": 52,
+                "text": "sb2",
+                "image": {
+                    "value": "0x27",
+                    "imageType": "STATIC",
+                    "isTemplate": true
+                },
+                "isHighlighted": true,
+                "systemAction": "DEFAULT_ACTION"
+            }
+        ],
+        "alertIcon": {
+            "value": "0x21",
+            "imageType": "STATIC",
+            "isTemplate": true
+        },
+        "cancelID": 42
+    },
+    "name": "subtle2sb"
+},
+{
+    "rpc": "PutFile",
+    "parameters": {
+        "syncFileName": "AppIcon",
+        "fileType": "GRAPHIC_PNG",
+        "persistentFile": true
+    },
+    "bulkData": [
+        60,
+        33,
+        ...
+        62
+    ],
+    "name": "putFileAppIcon"
+}
+```
+
 ## Contributing
 Contributions are welcome but to prevent duplicate efforts please open an issue to discuss any potential changes before developing them.
