@@ -29,11 +29,13 @@ Navigate to `$HOST:8080` in your browser to access the web app.
 
 ### Changing the Spec
 
-- update rpc_spec remote and branch in [`AppConnection.vue`](https://github.com/SmartDeviceLink-Examples/rpc_builder_app_js/blob/master/src/components/AppConnection.vue#L24) 
-- clone the javascript suite and checkout the same submodule rpc_spec remote and branch
-- update MAX_RPC_VERSION in `_LifecycleManager.js` to match RPC spec version you are testing
-- build the javascript suite
-- copy javascript suite lib/js/dist/SDL.min.js to rpc_builder_app_js/public/.
+```bash
+cd rpc_builder_app_js
+npm run api <branch>
+```
+
+Replace `<branch>` with the branch of the `rpc_spec` you wish to test against.
+This will change the rpc_builder to use that version of the MOBILE_API and sdl_javascript_suite for testing.
 
 ## Contributing
 Contributions are welcome but to prevent duplicate efforts please open an issue to discuss any potential changes before developing them.
