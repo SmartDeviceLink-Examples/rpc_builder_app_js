@@ -18,7 +18,9 @@
 export default {
   name: 'AppConnection',
   data () {
-    return {};
+    return {
+        version: null
+    };
   },
   created: function() {
         var remote = 'smartdevicelink';
@@ -43,6 +45,9 @@ export default {
                             return element.attributes.name.nodeValue;
                         })
                 } else {
+                    if (node.nodeName === 'interface') {
+                        that.version = node.attributes.version.nodeValue.split('.');
+                    }
                     for (var child of node.childNodes) {
                         xml2json(child);
                     }
@@ -118,6 +123,9 @@ export default {
             .setPersistent(true);
 
         lifecycleConfig.setAppIcon(file);
+        document.SDL.manager.lifecycle._LifecycleManager.MAX_RPC_VERSION.setMajor(this.version[0]);
+        document.SDL.manager.lifecycle._LifecycleManager.MAX_RPC_VERSION.setMinor(this.version[1]);
+        document.SDL.manager.lifecycle._LifecycleManager.MAX_RPC_VERSION.setPatch(this.version[2]);
 
         const appConfig = new SDL.manager.AppConfig()
             .setLifecycleConfig(lifecycleConfig);
@@ -139,6 +147,8 @@ export default {
         // apply hooks in sdl js library
 
         // allow sending of RPCs that don't follow the spec
+        // todo add warning confirm dialog if RPC doesn't conform to spec
+        document.validateType = document.SDL.rpc.RpcStruct._validateType;
         document.SDL.rpc.RpcStruct._validateType = function() { return true; }
 
         // log outgoing RPCs

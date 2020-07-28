@@ -85,9 +85,9 @@ export default {
         if (savedRpcs) {
             var savedList = JSON.parse(savedRpcs);
             for (var savedRpc of savedList) {
-                var option = document.createElement('option');
-                option.text = savedRpc.name;
-                select2.appendChild(option);
+                var option2 = document.createElement('option');
+                option2.text = savedRpc.name;
+                select2.appendChild(option2);
             }
         }
         document.querySelector('input#irpcs').focus();
@@ -197,6 +197,7 @@ export default {
 
         document.sdlManager.sendRpc(rpc);
         this.closeModal();
+        this.params = [];
     }
   }
 }

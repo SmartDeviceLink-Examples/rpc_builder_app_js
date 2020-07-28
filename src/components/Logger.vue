@@ -7,18 +7,18 @@
 		<div class="logContainer" id="logContainer" v-on:scroll="onScroll">
 
 		</div>
-        <modal name="save-rpc" id="saveRpc" height="auto" @before-close="beforeClose" @opened="opened" :clickToClose="false">
-            <div class="saveRpcContainer">
-                <h3>Save RPC</h3>
-                <div class="parameter"><label for="name">Name</label><input type="text" id="name" placeholder="saved rpc"/></div>
-                <div class="parameter"><label for="rpcName">RPC</label><input type="text" id="rpcName" disabled/></div>
-                <label for="parameters">Parameters:</label><br><p id="parameters"/>
-                <div class="buttons">
-                    <button id="cancel" v-on:click="cancelSave">CANCEL</button>
-                    <button id="btnSaveRpc" v-on:click="closeModal">SAVE RPC</button>
-                </div>
-            </div>
-        </modal>
+		<modal name="save-rpc" id="saveRpc" height="auto" @before-close="beforeClose" @opened="opened" :clickToClose="false">
+			<div class="saveRpcContainer">
+				<h3>Save RPC</h3>
+				<div class="parameter"><label for="name">Name</label><input type="text" id="name" placeholder="saved rpc"/></div>
+				<div class="parameter"><label for="rpcName">RPC</label><input type="text" id="rpcName" disabled/></div>
+				<label for="parameters">Parameters:</label><br><p id="parameters"/>
+				<div class="buttons">
+					<button id="cancel" v-on:click="cancelSave">CANCEL</button>
+					<button id="btnSaveRpc" v-on:click="closeModal">SAVE RPC</button>
+				</div>
+			</div>
+		</modal>
 	</div>
 </template>
 
@@ -55,11 +55,11 @@ export default {
 		}
 	},
 	methods: {
-    	openModal () {
-    	    this.$modal.show('save-rpc');
-    	},
-    	closeModal () {
-    	    this.$modal.hide('save-rpc');
+		openModal () {
+			this.$modal.show('save-rpc');
+		},
+		closeModal () {
+			this.$modal.hide('save-rpc');
 		},
 		cancelSave() {
 			this.cancelled = true;
@@ -121,13 +121,13 @@ export default {
 				return;
 			}
 
-        	var savedRpcName = document.querySelector('input#name').value;
+			var savedRpcName = document.querySelector('input#name').value;
 
-        	if (savedRpcName === '') {
-        	    event.cancel();
-        	    alert('please name the new saved rpc');
-        	    return;
-        	}
+			if (savedRpcName === '') {
+				event.cancel();
+				alert('please name the new saved rpc');
+				return;
+			}
 
 			this.pendingSavedRpc.name = savedRpcName;
 
@@ -140,8 +140,7 @@ export default {
 			if (typeof (Storage) !== "undefined") {
 				var savedRpcs = localStorage.getItem('savedRpcs');
 				if (!savedRpcs) {
-					var json = JSON.stringify([ this.pendingSavedRpc ], null, 4);
-					localStorage.setItem('savedRpcs', json);
+					localStorage.setItem('savedRpcs', JSON.stringify([ this.pendingSavedRpc ], null, 4));
 				} else {
 					var json = JSON.parse(savedRpcs);
 					for (var rpc of json) {
@@ -159,7 +158,7 @@ export default {
 				alert('local storage is not supported by your browser');
 			}
 			this.pendingSavedRpc = null;
-   		}
+		}
 	}
 }
 </script>
