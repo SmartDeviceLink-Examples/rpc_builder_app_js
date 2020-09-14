@@ -6,7 +6,8 @@
                 <div class="parameter"><label for="id">Application ID</label><input type="text" id="id" value="rpcb-js"/></div>
                 <div class="parameter"><label for="name">Application Name</label><input type="text" id="name" value="RPC Builder"/></div>
                 <div class="parameter"><label for="types">App HMI Types</label><select id="types"/></div>
-                <div class="parameter"><label for="wsUrl">WS URL</label><input type="text" id="wsUrl" value="ws://"/></div>
+                <div class="parameter"><label for="hashID">Hash ID</label><input type="text" id="hashID" value=""/></div>
+                <div class="parameter"><label for="wsUrl">WS URL</label><input type="text" id="wsUrl" value="ws://192.168.1.0"/></div>
                 <div class="parameter"><label for="wsPort">WS Port</label><input type="text" id="wsPort" value="2020"/></div>
                 <button id="connect" v-on:click="closeModal">CONNECT</button>
             </div>
@@ -95,8 +96,12 @@ export default {
         var appName = document.querySelector('input#name').value;
         var typeElem = document.querySelector('select#types');
         var appHMIType = typeElem.childNodes[typeElem.selectedIndex].value;
+        var hashId = document.querySelector('input#hashID').value;
         var wsUrl = document.querySelector('input#wsUrl').value;
         var wsPort = document.querySelector('input#wsPort').value;
+        if (hashId === '') {
+            hashId = null;
+        }
 
         if (wsUrl === 'ws://') {
             event.cancel();
@@ -111,7 +116,8 @@ export default {
             .setAppId(appId)
             .setAppName(appName)
             .setLanguageDesired(SDL.rpc.enums.Language.EN_US)
-            .setAppTypes([ appHMIType ]);
+            .setAppTypes([ appHMIType ])
+            .setResumeHash(hashId);
 
         lifecycleConfig.setTransportConfig(new SDL.transport.WebSocketClientConfig(wsUrl, wsPort));
 
