@@ -5,9 +5,9 @@
 
         <div class="headerRight">
             <input type='file' id='inputFile' style='display:none;' v-on:change="importSavedRpcs">
+            <button id="createRPC" v-on:click="openModal">Create RPC</button>
             <button id="importSavedRpcs" v-on:click="inputClick">Import RPCs</button>
             <button id="exportSavedRpcs" v-on:click="exportSavedRpcs">Export RPCs</button>
-            <button id="createRPC" v-on:click="openModal">Create RPC</button>
             <p id="hmiStatus"></p>
         </div>
 
