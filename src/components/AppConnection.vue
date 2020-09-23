@@ -30,9 +30,9 @@ export default {
         var that = this;
         fetch(`https://raw.githubusercontent.com/${remote}/rpc_spec/${branch}/MOBILE_API.xml`).then((res) => res.text()).then((xml) => {
             var xml2json = function(node) {
-                if (node.nodeName === 'struct' || (node.nodeName === 'function' && node.attributes && node.attributes.messagetype 
-                     && node.attributes.messagetype.nodeValue === 'request')) {
-                        document.apiSpec[node.nodeName + 's'][node.attributes.name.nodeValue] = 
+                if (node.nodeName === 'struct' || (node.nodeName === 'function' && node.attributes && node.attributes.messagetype
+                     && (node.attributes.messagetype.nodeValue === 'request' || node.attributes.name.nodeValue === 'OnAppServiceData'))) {
+                        document.apiSpec[node.nodeName + 's'][node.attributes.name.nodeValue] =
                             [...node.childNodes].filter(x => x.tagName === 'param').map(child => {
                                 var param = {};
                                 for (var attrib of child.attributes) {
@@ -41,7 +41,7 @@ export default {
                                 return param;
                             });
                 } else if (node.nodeName === 'enum') {
-                    document.apiSpec.enums[node.attributes.name.nodeValue] = 
+                    document.apiSpec.enums[node.attributes.name.nodeValue] =
                         [...node.childNodes].filter(child => child.tagName === 'element').map(element => {
                             return element.attributes.name.nodeValue;
                         })
@@ -117,6 +117,7 @@ export default {
             .setAppName(appName)
             .setLanguageDesired(SDL.rpc.enums.Language.EN_US)
             .setAppTypes([ appHMIType ])
+            .setVrSynonyms([ appName ])
             .setResumeHash(hashId);
 
         lifecycleConfig.setTransportConfig(new SDL.transport.WebSocketClientConfig(wsUrl, wsPort));
@@ -155,7 +156,14 @@ export default {
         // allow sending of RPCs that don't follow the spec
         // todo add warning confirm dialog if RPC doesn't conform to spec
         document.validateType = document.SDL.rpc.RpcStruct._validateType;
-        document.SDL.rpc.RpcStruct._validateType = function() { return true; }
+        document.SDL.rpc.RpcStruct._validateType =
+            function(tClass, obj, isArray = false) {
+                try {
+                    document.validateType(tClass, obj, isArray);
+                } catch(error) {
+                    console.log('validateType: ', error);
+                }
+            }
 
         // log outgoing RPCs
         const sendFunc = document.sdlManager._lifecycleManager.sendRpcMessage;
@@ -168,6 +176,16 @@ export default {
         const recvFunc = document.sdlManager._lifecycleManager._handleRpc;
         document.sdlManager._lifecycleManager._handleRpc = async (message) => {
             if (document.logRpc) { document.logRpc(message); }
+            if (message && message._messageType === 0 && message._functionName === 'GetAppServiceData') {
+                setTimeout(() => { // incoming app service data subscription request, ask user how to reply
+                    var response = new document.SDL.rpc.messages.GetAppServiceDataResponse();
+                    response.setCorrelationId(message._correlationID);
+                    var allow = confirm(`request to subscribe to $asd_type app service data, allow or deny?`);
+                    response.setSuccess(allow);
+                    response.setResultCode(allow ? "SUCCESS" : "REJECTED");
+                    document.sdlManager._lifecycleManager.sendRpcMessage(response);
+                }, 5);
+            }
             return recvFunc.call(document.sdlManager._lifecycleManager, message);
         };
     }
