@@ -31,12 +31,14 @@ Navigate to `$HOST:8080` in your browser to access the web app.
 
 ```bash
 cd rpc_builder_app_js
-npm run api <branch>
+npm run api <remote> <branch> <remote_user_name>
 ```
 
-Replace `<branch>` with the branch of the `rpc_spec` you wish to test against.
-This will change the rpc_builder to use that version of the MOBILE_API and sdl_javascript_suite for testing.
+This will configure the rpc_builder and sdl_javascript_suite to use a specific API spec:
 
+* Replace `<branch>` with the desired branch of the `rpc_spec`
+* Replace `<remote>` with the remote name of the `rpc_spec`, like `origin`
+* Replace `<remote_user_name>` with the owner of the `rpc_spec` repo, like `smartdevicelink`. When you load the page, the MOBILE_API is parsed from this link: `https://raw.githubusercontent.com/${remote_user_name}/rpc_spec/${branch}/MOBILE_API.xml`
 
 ### Saved RPCs
 
