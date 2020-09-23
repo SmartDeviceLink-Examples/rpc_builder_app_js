@@ -180,7 +180,7 @@ export default {
                 setTimeout(() => { // incoming app service data subscription request, ask user how to reply
                     var response = new document.SDL.rpc.messages.GetAppServiceDataResponse();
                     response.setCorrelationId(message._correlationID);
-                    var allow = confirm(`request to subscribe to $asd_type app service data, allow or deny?`);
+                    var allow = confirm(`request to subscribe to ${message.getParameter('serviceType')} app service data, allow or deny?`);
                     response.setSuccess(allow);
                     response.setResultCode(allow ? "SUCCESS" : "REJECTED");
                     document.sdlManager._lifecycleManager.sendRpcMessage(response);
