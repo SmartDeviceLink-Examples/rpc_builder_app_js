@@ -11,7 +11,7 @@
             <p id="hmiStatus"></p>
         </div>
 
-        <modal name="rpc" id="connect" height="auto" @opened="opened" :clickToClose="false">
+        <modal class="configRpc" name="rpc" id="connect" height="auto" @opened="opened" :clickToClose="false">
             <div class="paramContainer" id="container">
                 <h3>Configure RPC</h3>
                 <div class="parameter" id="select">
@@ -244,6 +244,12 @@ export default {
 </style>
 
 <style scoped>
+.configRpc {
+    max-height: 80vh;
+    overflow-y: scroll;
+    margin-top: 10vh;
+}
+
 .paramContainer {
     display: flex;
     flex-direction: column;
