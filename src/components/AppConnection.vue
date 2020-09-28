@@ -68,6 +68,10 @@ export default {
                 name: 'bulkData',
                 mandatory: 'true'
             });
+            document.apiSpec.functions.SystemRequest.push({
+                name: 'bulkData',
+                mandatory: 'true'
+            });
 
             console.log(`api spec ${remote}/${branch} has been loaded`);
             that.openModal();
