@@ -16,7 +16,7 @@ if not os.path.isdir('sdl_javascript_suite/'):
 os.chdir('sdl_javascript_suite/')
 subprocess.call(['git', 'fetch'])
 
-if not os.path.isdir('sdl_javascript_suite/lib/rpc_spec'):
+if not os.path.isdir('lib/rpc_spec'):
     subprocess.call(['git', 'submodule', 'init'])
     subprocess.call(['git', 'submodule', 'update'])
 
