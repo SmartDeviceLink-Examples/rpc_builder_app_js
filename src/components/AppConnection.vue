@@ -70,7 +70,7 @@ export default {
             });
             document.apiSpec.functions.SystemRequest.push({
                 name: 'bulkData',
-                mandatory: 'true'
+                mandatory: 'false'
             });
 
             console.log(`api spec ${remote}/${branch} has been loaded`);
