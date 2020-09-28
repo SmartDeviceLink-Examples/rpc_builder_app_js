@@ -558,6 +558,9 @@ function createParam(param) {
     else if (param.type === 'Integer') {
         return new IntParameter(param.name, param.mandatory, param.minvalue, param.maxvalue);
     }
+    else if (param.type === 'Float') {
+        return new IntParameter(param.name, param.mandatory, param.minvalue, param.maxvalue);
+    }
     else if (param.type === 'String') {
         return new StringParameter(param.name, param.mandatory, param.minlength, param.maxlength);
     }
