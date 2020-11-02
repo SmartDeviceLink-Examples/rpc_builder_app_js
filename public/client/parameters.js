@@ -506,7 +506,7 @@ class ArrayParameter extends Parameter {
     }
 
     value = function() {
-        return this._array.map((param) => param.value())
+        return this._array.filter((param) => param.included()).map((param) => param.value())
     }
 
     setValue = function(array) {
