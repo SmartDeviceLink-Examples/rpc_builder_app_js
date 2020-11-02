@@ -28,7 +28,7 @@ class Parameter {
         this.pDiv.setAttribute('class', 'rpcParam');
 
         var includedCheckbox = document.createElement('input');
-        includedCheckbox.setAttribute('style', 'flex: 2;');
+        includedCheckbox.setAttribute('style', 'flex: 2;width: 18px;height: 18px;');
         includedCheckbox.setAttribute('type', 'checkbox');
         includedCheckbox.setAttribute('id', 'included');
         var self = this;
@@ -298,7 +298,7 @@ class StructParameter extends Parameter {
         headerDiv.setAttribute('class', 'rpcParamChild');
 
         var includedCheckbox = document.createElement('input');
-        includedCheckbox.setAttribute('style', 'flex: 2;');
+        includedCheckbox.setAttribute('style', 'flex: 2;width: 18px;height: 18px;');
         includedCheckbox.setAttribute('type', 'checkbox');
         includedCheckbox.setAttribute('id', 'included');
 
@@ -345,9 +345,12 @@ class StructParameter extends Parameter {
     html = function() {
         var div = this.base_html();
 
+        var indentDiv = document.createElement('div');
+        indentDiv.setAttribute('style', 'margin-left: 20px')
         for (var param of this._params) {
-            div.appendChild(param.html());
+            indentDiv.appendChild(param.html());
         }
+        div.appendChild(indentDiv);
 
         return this.pDiv;
     }
@@ -502,7 +505,7 @@ class ArrayParameter extends Parameter {
         var newParam = createParam(this._param);
         this._param.name = oldName;
         this._array.push(newParam);
-        this.sDiv.appendChild(newParam.html());
+        this.sDiv.firstChild.appendChild(newParam.html());
     }
 
     value = function() {
@@ -516,7 +519,7 @@ class ArrayParameter extends Parameter {
             var newParam = createParam(this._param);
             this._param.name = this._name;
             this._array.push(newParam);
-            this.sDiv.appendChild(newParam.html());
+            this.sDiv.firstChild.appendChild(newParam.html());
             newParam.setValue(elem);
             newParam.setIncluded(true);
         }
@@ -544,7 +547,7 @@ class ArrayParameter extends Parameter {
         headerDiv.setAttribute('class', 'rpcParamChild');
 
         var includedCheckbox = document.createElement('input');
-        includedCheckbox.setAttribute('style', 'flex: 2;');
+        includedCheckbox.setAttribute('style', 'flex: 2;width: 18px;height: 18px;');
         includedCheckbox.setAttribute('type', 'checkbox');
         includedCheckbox.setAttribute('id', 'included');
 
@@ -595,9 +598,12 @@ class ArrayParameter extends Parameter {
     html = function() {
         var div = this.base_html();
 
+        var indentDiv = document.createElement('div');
+        indentDiv.setAttribute('style', 'margin-left: 20px')
         for (var element of this._array) {
-            div.appendChild(element.html());
+            indentDiv.appendChild(element.html());
         }
+        div.appendChild(indentDiv);
 
         return this.pDiv;
     }
