@@ -7,7 +7,7 @@
                 <div class="parameter"><label for="name">Application Name</label><input type="text" id="name" value="RPC Builder"/></div>
                 <div class="parameter"><label for="types">App HMI Types</label><select id="types"/></div>
                 <div class="parameter"><label for="hashID">Hash ID</label><input type="text" id="hashID" value=""/></div>
-                <div class="parameter"><label for="wsUrl">WS URL</label><input type="text" id="wsUrl" value="ws://192.168.1.0"/></div>
+                <div class="parameter"><label for="wsUrl">WS URL</label><input type="text" id="wsUrl" value="ws://"/></div>
                 <div class="parameter"><label for="wsPort">WS Port</label><input type="text" id="wsPort" value="2020"/></div>
                 <button id="connect" v-on:click="closeModal">CONNECT</button>
             </div>
