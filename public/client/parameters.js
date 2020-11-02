@@ -15,6 +15,12 @@ class Parameter {
 
     setIncluded = function(included) {
         this.pDiv.firstChild.checked = included;
+        this.onIncludedChange(included);
+    }
+
+    onIncludedChange = function(included) {
+        // Unused for base parameter class
+        console.log("Included:" + included)
     }
 
     base_html = function() {
@@ -24,10 +30,13 @@ class Parameter {
         var includedCheckbox = document.createElement('input');
         includedCheckbox.setAttribute('style', 'flex: 2;');
         includedCheckbox.setAttribute('type', 'checkbox');
-        includedCheckbox.setAttribute('id', 'include');
-        includedCheckbox.checked = true;
-
+        includedCheckbox.setAttribute('id', 'included');
+        var self = this;
+        includedCheckbox.onchange = function() {
+            self.onIncludedChange(includedCheckbox.checked);
+        }
         if (this._mandatory) {
+            includedCheckbox.checked = true;
             includedCheckbox.disabled = true;
         }
 
@@ -67,6 +76,10 @@ class BoolParameter extends Parameter {
         this.pDiv.children[2].checked = bool;
     }
 
+    onIncludedChange = function(included) {
+        this.pDiv.children[2].disabled = !included;
+    }
+
     html = function() {
         var div = this.base_html();
 
@@ -74,6 +87,7 @@ class BoolParameter extends Parameter {
         valueCheckbox.setAttribute('style', 'flex: 4;');
         valueCheckbox.setAttribute('type', 'checkbox');
         valueCheckbox.checked = true;
+        valueCheckbox.disabled = !this.included();
 
         div.appendChild(valueCheckbox);
 
@@ -96,6 +110,10 @@ class IntParameter extends Parameter {
         this.pDiv.children[2].valueAsNumber = integer;
     }
 
+    onIncludedChange = function(included) {
+        this.pDiv.children[2].disabled = !included;
+    }
+
     html = function() {
         var div = this.base_html();
 
@@ -110,6 +128,7 @@ class IntParameter extends Parameter {
         var valueInput = document.createElement('input');
         valueInput.setAttribute('style', 'flex: 4;');
         valueInput.setAttribute('type', 'number');
+        valueInput.disabled = !this.included();
 
         div.appendChild(valueInput);
 
@@ -132,6 +151,10 @@ class StringParameter extends Parameter {
         this.pDiv.children[2].value = string;
     }
 
+    onIncludedChange = function(included) {
+        this.pDiv.children[2].disabled = !included;
+    }
+
     html = function() {
         var div = this.base_html();
 
@@ -146,6 +169,7 @@ class StringParameter extends Parameter {
         var valueInput = document.createElement('input');
         valueInput.setAttribute('style', 'flex: 4;');
         valueInput.setAttribute('type', 'text');
+        valueInput.disabled = !this.included();
 
         div.appendChild(valueInput);
 
@@ -167,6 +191,10 @@ class EnumParameter extends Parameter {
         this.pDiv.children[3].value = enumVal;
     }
 
+    onIncludedChange = function(included) {
+        this.pDiv.children[3].disabled = !included;
+    }
+
     html = function() {
         var div = this.base_html();
 
@@ -183,6 +211,7 @@ class EnumParameter extends Parameter {
         input.setAttribute('type', 'text');
         input.setAttribute('style', 'flex: 4;');
         input.setAttribute('list', `e_${this._name}`);
+        input.disabled = !this.included();
 
         div.appendChild(datalist);
         div.appendChild(input);
@@ -218,6 +247,7 @@ class StructParameter extends Parameter {
     collapse = function() {
         this._collapsed = !this._collapsed;
         this._collapseButton.innerHTML = this._collapsed ? 'expand' : 'collapse';
+        this._collapseButton.disabled = this._collapsed && !this.included();
 
         this.pDiv.children[1].setAttribute('style',
             `display: ${this._collapsed ? 'none' : 'flex'};`);
@@ -239,10 +269,15 @@ class StructParameter extends Parameter {
             var savedParam = object[param._name];
             if (savedParam) {
                 param.setValue(savedParam);
+                param.setIncluded(true);
             } else {
                 param.setIncluded(false);
             }
         }
+    }
+
+    onIncludedChange = function(included) {
+        this._collapseButton.disabled = this._collapsed && !included;
     }
 
     included = function() {
@@ -251,6 +286,7 @@ class StructParameter extends Parameter {
 
     setIncluded = function(included) {
         this.pDiv.firstChild.firstChild.checked = included;
+        this.onIncludedChange(included);
     }
 
     base_html = function() {
@@ -264,10 +300,15 @@ class StructParameter extends Parameter {
         includedCheckbox.setAttribute('style', 'flex: 2;');
         includedCheckbox.setAttribute('type', 'checkbox');
         includedCheckbox.setAttribute('id', 'included');
-        includedCheckbox.checked = true;
 
         if (this._mandatory) {
+            includedCheckbox.checked = true;
             includedCheckbox.disabled = true;
+        }
+
+        var self = this;
+        includedCheckbox.onchange = function() {
+            self.onIncludedChange(includedCheckbox.checked);
         }
 
         headerDiv.appendChild(includedCheckbox);
@@ -282,6 +323,7 @@ class StructParameter extends Parameter {
         this._collapseButton.setAttribute('style', 'flex: 4;');
         this._collapseButton.onclick = this.collapse;
         this._collapseButton.innerHTML = this._collapsed ? 'expand' : 'collapse';
+        this._collapseButton.disabled = this._collapsed && !includedCheckbox.checked;
 
         headerDiv.appendChild(this._collapseButton);
 
@@ -475,8 +517,13 @@ class ArrayParameter extends Parameter {
             this._array.push(newParam);
             this.sDiv.appendChild(newParam.html());
             newParam.setValue(elem);
+            newParam.setIncluded(true);
         }
         this._param.name = oldName;
+    }
+
+    onIncludedChange = function(included) {
+        this.pDiv.firstChild.children[2].disabled = !included;
     }
 
     included = function() {
@@ -485,6 +532,7 @@ class ArrayParameter extends Parameter {
 
     setIncluded = function(included) {
         this.pDiv.firstChild.firstChild.checked = included;
+        this.onIncludedChange(included);
     }
 
     base_html = function() {
@@ -498,10 +546,15 @@ class ArrayParameter extends Parameter {
         includedCheckbox.setAttribute('style', 'flex: 2;');
         includedCheckbox.setAttribute('type', 'checkbox');
         includedCheckbox.setAttribute('id', 'included');
-        includedCheckbox.checked = true;
 
         if (this._mandatory) {
             includedCheckbox.disabled = true;
+            includedCheckbox.checked = true;
+        }
+
+        var self = this;
+        includedCheckbox.onchange = function() {
+            self.onIncludedChange(includedCheckbox.checked);
         }
 
         headerDiv.appendChild(includedCheckbox);
@@ -524,6 +577,7 @@ class ArrayParameter extends Parameter {
         addItem.setAttribute('style', 'flex: 4;');
         addItem.onclick = this.addItem;
         addItem.innerText = "add item";
+        addItem.disabled = !includedCheckbox.checked;
 
         headerDiv.appendChild(addItem);
 

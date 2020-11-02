@@ -121,6 +121,7 @@ export default {
             var paramObj = createParam(param);
             this.params.push(paramObj);
             modal.insertBefore(paramObj.html(), modal.lastChild);
+            paramObj.setIncluded(param.mandatory === 'true');
         }
     },
     selected2() {
@@ -168,8 +169,9 @@ export default {
             modal.insertBefore(paramObj.html(), modal.lastChild);
 
             if (!savedParam) {
-                paramObj.setIncluded(false);
+                paramObj.setIncluded(param.mandatory === 'true');
             } else {
+                paramObj.setIncluded(true);
                 paramObj.setValue(savedParam);
             }
         }
