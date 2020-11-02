@@ -178,8 +178,9 @@ class StringParameter extends Parameter {
 }
 
 class EnumParameter extends Parameter {
-    constructor(name, mandatory, map) {
+    constructor(name, mandatory, type, map) {
         super(name, mandatory);
+        this._type = type;
         this._map = map;
     }
 
@@ -199,7 +200,7 @@ class EnumParameter extends Parameter {
         var div = this.base_html();
 
         var datalist = document.createElement('datalist');
-        datalist.setAttribute('id', `e_${this._name}`);
+        datalist.setAttribute('id', `e_${this._name}_${this._type}`);
 
         for (var type in this._map) {
             var option = document.createElement('option');
@@ -210,7 +211,7 @@ class EnumParameter extends Parameter {
         var input = document.createElement('input');
         input.setAttribute('type', 'text');
         input.setAttribute('style', 'flex: 4;');
-        input.setAttribute('list', `e_${this._name}`);
+        input.setAttribute('list', `e_${this._name}_${this._type}`);
         input.disabled = !this.included();
 
         div.appendChild(datalist);
@@ -354,7 +355,7 @@ class StructParameter extends Parameter {
 
 class ImageValueParameter extends EnumParameter {
     constructor(name, mandatory, map) {
-        super(name, mandatory, map);
+        super(name, mandatory, "ImageType", map);
         this.typeChange = this.typeChange.bind(this);
     }
 
@@ -370,7 +371,7 @@ class ImageValueParameter extends EnumParameter {
 
 class ImageTypeParameter extends EnumParameter {
     constructor(name, mandatory, map, onChangeCallback) {
-        super(name, mandatory, map);
+        super(name, mandatory, "ImageType", map);
         this._cb = onChangeCallback;
     }
 
@@ -622,7 +623,7 @@ function createParam(param) {
         return new ImageParameter(param.name, param.mandatory);
     }
     else if (param.type in document.apiSpec.enums) {
-        return new EnumParameter(param.name, param.mandatory, document.apiSpec.enums[param.type]);
+        return new EnumParameter(param.name, param.mandatory, param.type, document.apiSpec.enums[param.type]);
     }
     else if (param.type in document.apiSpec.structs) {
         return new StructParameter(param.name, param.mandatory, param.type);
