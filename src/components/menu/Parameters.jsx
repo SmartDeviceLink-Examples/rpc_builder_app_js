@@ -262,13 +262,8 @@ export class StructParameter extends Parameter {
 
         this.state = {
             value: null,
-            paramsHtml: [],
             parameters: params,
             collapsed: true
-        }
-
-        for (var parameter in struct) {
-            this.state.paramsHtml.push(api2html(this, struct[parameter]));
         }
     }
 
@@ -305,8 +300,12 @@ export class StructParameter extends Parameter {
         var carrot = "<";
 
         if (this.state.collapsed) {
+            var that = this;
+            var struct = document.apiSpec.structs[this.props.param.type];
             structDatas = (<div className="param_struct">
-                { this.state.paramsHtml }
+                {
+                    struct.map(parameter => api2html(that, parameter))
+                }
             </div>);
         }
 
@@ -334,7 +333,6 @@ export class ArrayParameter extends Parameter {
 
         this.state = {
             value: null,
-            paramsHtml: [],
             parameters: {}
         }
     }
@@ -342,7 +340,7 @@ export class ArrayParameter extends Parameter {
     addItem() {
         this.props.setIncluded(true);
         var param = Object.assign({}, this.props.param);
-        param.name += `[${this.state.paramsHtml.length}]`;
+        param.name += `[${Object.keys(this.state.parameters).length}]`;
         delete param.array;
 
         var params = this.state.parameters;
@@ -354,13 +352,6 @@ export class ArrayParameter extends Parameter {
 
         this.setState({
             parameters: params
-        });
-
-        var paramsHtml = this.state.paramsHtml;
-        paramsHtml.push(api2html(this, param));
-
-        this.setState({
-            paramsHtml: paramsHtml
         });
     }
 
@@ -388,8 +379,17 @@ export class ArrayParameter extends Parameter {
 
     render() {
         var button = "+";
+        var that = this;
         var structDatas = (<div className="param_struct">
             { this.state.paramsHtml }
+            {
+                Object.keys(this.state.parameters).map(paramName => {
+                    var param = Object.assign({}, this.props.param);
+                    delete param.array;
+                    param.name = paramName;
+                    return api2html(that, param);
+                })
+            }
         </div>);
 
         return (<div key={this.props.param.name} className="column_param">
