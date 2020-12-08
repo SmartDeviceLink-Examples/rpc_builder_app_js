@@ -98,8 +98,8 @@ class BoolParameter extends Parameter {
 class IntParameter extends Parameter {
     constructor(name, mandatory, min, max) {
         super(name, mandatory);
-        this._min = min ? parseInt(min) : undefined;
-        this._max = max ? parseInt(max) : undefined;
+        this._min = min ? parseFloat(min) : undefined;
+        this._max = max ? parseFloat(max) : undefined;
     }
 
     value = function() {
