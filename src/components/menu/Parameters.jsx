@@ -82,7 +82,6 @@ export class BoolParameter extends Parameter {
                         type="checkbox"
                         checked={this.props.included}
                         onChange={event => { this.props.setIncluded(event.target.checked); }}
-                        style={{  }}
                     />
                     <span key="save" className="param_name">{this.props.param.name}</span>
                 </div>
@@ -129,7 +128,6 @@ export class IntParameter extends Parameter {
                         type="checkbox"
                         checked={this.props.included}
                         onChange={event => { this.props.setIncluded(event.target.checked); }}
-                        style={{  }}
                     />
                     <span key="save" className="param_name">{this.props.param.name + bounds}</span>
                 </div>
@@ -175,7 +173,6 @@ export class StringParameter extends Parameter {
                         type="checkbox"
                         checked={this.props.included}
                         onChange={event => { this.props.setIncluded(event.target.checked); }}
-                        style={{  }}
                     />
                     <span key="save" className="param_name">{this.props.param.name + bounds}</span>
                 </div>
@@ -186,7 +183,6 @@ export class StringParameter extends Parameter {
             />
         </div>);
     }
-    
 }
 
 export class EnumParameter extends Parameter {
@@ -220,7 +216,6 @@ export class EnumParameter extends Parameter {
                         type="checkbox"
                         checked={this.props.included}
                         onChange={event => { this.props.setIncluded(event.target.checked); }}
-                        style={{  }}
                     />
                     <span key="save" className="param_name">{this.props.param.name}</span>
                 </div>
@@ -231,7 +226,62 @@ export class EnumParameter extends Parameter {
 }
 
 export class FileParameter extends Parameter {
+    constructor(props) {
+        super(props);
 
+        this.set = this.set.bind(this);
+    }
+
+    set(event) {
+        var input = event.target;
+        if (!input || !input.files || !input.files[0]) {
+            return;
+        }
+
+        let fileReader = new FileReader();
+
+        fileReader.onload = (event) => {
+            var b64data = event.target.result;
+            var characters = atob(b64data.substring(b64data.indexOf(",") + 1));
+
+            const numbers = new Array(characters.length);
+            for (let i = 0; i < characters.length; i++) {
+                numbers[i] = characters.charCodeAt(i);
+            }
+
+            this.props.setValue(new Uint8Array(numbers));
+            this.props.setIncluded(true);
+        }
+
+        fileReader.readAsDataURL(input.files[0]);
+    }
+
+    render() {
+        var bounds = '';
+        if (this.props.param.minlength !== undefined && this.props.param.maxlength !== undefined) {
+            bounds = ` (${this.props.param.minlength} - ${this.props.param.maxlength})`;
+        } else if (this.props.param.minlength !== undefined) {
+            bounds = ` (min: ${this.props.param.minlength})`;
+        } else if (this.props.param.maxlength !== undefined) {
+            bounds = ` (max: ${this.props.param.maxlength})`;
+        }
+
+        var that = this;
+        return (<div key={this.props.param.name} className="basic_param">
+                <div className="basic_param_internal">
+                    <input className="br2 ba ph2 dark-grey b--grey--light"
+                        type="checkbox"
+                        checked={this.props.included}
+                        onChange={event => { this.props.setIncluded(event.target.checked); }}
+                    />
+                    <span key="save" className="param_name">{this.props.param.name}</span>
+                </div>
+                <input className="ph2 dark-grey choose_file"
+                    type="file"
+                    onChange={that.set}
+                />
+            </div>);
+    }
 }
 
 export class StructParameter extends Parameter {
@@ -315,7 +365,6 @@ export class StructParameter extends Parameter {
                     type="checkbox"
                     checked={this.props.included}
                     onChange={event => { this.props.setIncluded(event.target.checked); }}
-                    style={{  }}
                 />
                 <span key="save" className="param_name">{this.props.param.name}</span>
                 <span onClick={this.collapse} style={{ marginLeft: 'auto' }}>{carrot}</span>
@@ -398,7 +447,6 @@ export class ArrayParameter extends Parameter {
                     type="checkbox"
                     checked={this.props.included}
                     onChange={event => { this.props.setIncluded(event.target.checked); }}
-                    style={{  }}
                 />
                 <span key="save" className="param_name">{this.props.param.name}</span>
                 <span onClick={this.addItem} style={{ marginLeft: 'auto' }}>{button}</span>

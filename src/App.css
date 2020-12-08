@@ -11936,3 +11936,24 @@ html {
   margin-top: 2%;
   margin-bottom: 2%;
 }
+
+.fav_btns {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  max-width: 100%;
+}
+
+.fav_rpcs {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  /* overflow-y: scroll; */
+}
+
+.choose_file {
+  width: 40%;
+  overflow: hidden;
+}

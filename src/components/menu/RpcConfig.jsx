@@ -48,11 +48,19 @@ export default class RpcConfig extends React.Component {
     sendRpc() {
         console.log('sendRPC: ', this.state.selectedRpcName);
         var value = {};
+        var bulkData = null;
         for (var param in this.state.parameters) {
             var pObj = this.state.parameters[param];
-            if (pObj.included) { value[param] = pObj.value }
+            if (param === 'bulkData' && pObj.included) { bulkData = pObj.value }
+            else if (pObj.included) { value[param] = pObj.value }
         }
-        console.log('params: ', value);
+        console.log('params: ', value, bulkData);
+
+        const rpc = new document.SDL.rpc.messages[this.rpcName]({ parameters: value });
+        if (bulkData) {
+            rpc.setBulkData(bulkData);
+        }
+        document.sdlManager.sendRpc(rpc);
     }
 
     setSavedRpcName(name) {

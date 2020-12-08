@@ -117,7 +117,7 @@ export default class MenuBar extends React.Component {
                         tableId="mb-table"
                         id="favrpcs"
                         key="favrpcs"
-                        label="Favorite RPC"
+                        label="Favorite RPCs"
                         className="ph3"
                     >
                         <FavRpcs appServiceName="mediaServiceData"/>
