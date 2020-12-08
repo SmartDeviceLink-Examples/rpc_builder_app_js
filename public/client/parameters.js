@@ -268,11 +268,11 @@ class StructParameter extends Parameter {
     setValue = function(object) {
         for (var param of this._params) {
             var savedParam = object[param._name];
-            if (savedParam) {
+            if (savedParam === undefined) {
+                param.setIncluded(false);
+            } else {
                 param.setValue(savedParam);
                 param.setIncluded(true);
-            } else {
-                param.setIncluded(false);
             }
         }
     }
