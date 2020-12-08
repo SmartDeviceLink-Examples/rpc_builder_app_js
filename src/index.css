@@ -1,13 +1,52 @@
+@font-face {
+  font-family: 'LivioNorm-Light';
+  src: url('./fonts/LivioNorm-Light.ttf');
+}
+
+@font-face {
+  font-family: 'LivioNorm-Medium';
+  src: url('./fonts/LivioNorm-Medium.ttf');
+}
+
+@font-face {
+  font-family: 'LivioNorm-Regular';
+  src: url('./fonts/LivioNorm-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'LivioNorm-Bold';
+  src: url('./fonts/LivioNorm-Bold.ttf');
+}
+
+@font-face {
+  font-family: 'LivioMono-Regular';
+  src: url('./fonts/LivioMono-Regular.ttf');
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'LivioNorm-Regular', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+button {
+  font-family: 'LivioNorm-Regular', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+span {
+  font-family: 'LivioNorm-Bold';
+}
+
+.lb {
+  font-family: 'LivioNorm-Bold';
 }
