@@ -72,6 +72,10 @@ export default class MenuBar extends React.Component {
                 name: 'bulkData',
                 mandatory: 'true'
             });
+            document.apiSpec.functions.SystemRequest.push({
+                name: 'bulkData',
+                mandatory: 'false'
+            });
 
             console.log(`api spec ${remote}/${branch} has been loaded`);
         });
