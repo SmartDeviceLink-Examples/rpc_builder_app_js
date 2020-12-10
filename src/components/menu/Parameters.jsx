@@ -19,7 +19,13 @@ export function api2html(that, param, value = undefined) {
     }
     else if (param.type === 'Integer') {
         return (<IntParameter param={param} included={that.state.parameters[param.name].included}
-            value={value}
+            value={value} parse={parseInt}
+            setIncluded={(included) => that.setIncluded(param.name, included)}
+            setValue={(val) => that.setParamValue(param.name, val)} />);
+    }
+    else if (param.type === 'Float') {
+        return (<IntParameter param={param} included={that.state.parameters[param.name].included}
+            value={value} parse={parseFloat}
             setIncluded={(included) => that.setIncluded(param.name, included)}
             setValue={(val) => that.setParamValue(param.name, val)} />);
     }
@@ -116,7 +122,7 @@ export class IntParameter extends Parameter {
     set(e) {
         if (e.target && e.target.value) {
             this.props.setIncluded(true);
-            this.props.setValue(parseInt(e.target.value));
+            this.props.setValue(this.props.parse(e.target.value));
         }
     }
 
