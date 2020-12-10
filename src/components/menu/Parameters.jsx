@@ -3,45 +3,54 @@ import React from 'react';
 import ToggleSwitch from '../ToggleSwitch'
 import Select from '../Select';
 
-export function api2html(that, param) {
+export function api2html(that, param, value = undefined) {
     if (param.array === 'true') {
+        console.log('creating ArrayParameter value', value)
         return (<ArrayParameter param={param} included={that.state.parameters[param.name].included}
+            value={value}
             setIncluded={(included) => that.setIncluded(param.name, included)} 
             setValue={(val) => that.setParamValue(param.name, val)} />);
     }
     else if (param.type === 'Boolean') {
         return (<BoolParameter param={param} included={that.state.parameters[param.name].included}
+            value={value}
             setIncluded={(included) => that.setIncluded(param.name, included)}
             setValue={(val) => that.setParamValue(param.name, val)} />);
     }
     else if (param.type === 'Integer') {
         return (<IntParameter param={param} included={that.state.parameters[param.name].included}
+            value={value}
             setIncluded={(included) => that.setIncluded(param.name, included)}
             setValue={(val) => that.setParamValue(param.name, val)} />);
     }
     else if (param.type === 'String') {
         return (<StringParameter param={param} included={that.state.parameters[param.name].included}
+            value={value}
             setIncluded={(included) => that.setIncluded(param.name, included)}
             setValue={(val) => that.setParamValue(param.name, val)} />);
     }
     else if (param.type === 'Image') {
         return (<ImageParameter param={param} included={that.state.parameters[param.name].included}
+            value={value}
             setIncluded={(included) => that.setIncluded(param.name, included)}
             setValue={(val) => that.setParamValue(param.name, val)} />);
     }
     else if (param.type in document.apiSpec.enums) {
         return (<EnumParameter param={param} included={that.state.parameters[param.name].included}
+            value={value}
             setIncluded={(included) => that.setIncluded(param.name, included)}
             setValue={(val) => that.setParamValue(param.name, val)} />);
     }
     else if (param.type in document.apiSpec.structs) {
         return (<StructParameter param={param} included={that.state.parameters[param.name].included}
+            value={value}
             setIncluded={(included) => that.setIncluded(param.name, included)}
             setValue={(val) => that.setParamValue(param.name, val)} />);
     }
 
     if (param.name === 'bulkData') {
         return (<FileParameter param={param} included={that.state.parameters[param.name].included}
+            value={value}
             setIncluded={(included) => that.setIncluded(param.name, included)}
             setValue={(val) => that.setParamValue(param.name, val)} />);
     }
@@ -73,6 +82,7 @@ export class BoolParameter extends Parameter {
         let val = !this.state.value;
         this.setState({ value: val });
         this.props.setValue(val);
+        this.props.setIncluded(true);
     }
 
     render() {
@@ -101,15 +111,13 @@ export class IntParameter extends Parameter {
         super(props);
 
         this.set = this.set.bind(this);
-
-        this.state = {
-            value: null
-        }
     }
 
     set(e) {
-        this.setState({ value: e.target.value });
-        this.props.setValue(e.target.value);
+        if (e.target && e.target.value) {
+            this.props.setIncluded(true);
+            this.props.setValue(parseInt(e.target.value));
+        }
     }
 
     render() {
@@ -133,8 +141,9 @@ export class IntParameter extends Parameter {
                 </div>
                 <input className="br2 ba ph2 dark-grey b--grey--light"
                     type="number"
-                    onClick={this.set}
+                    onChange={this.set}
                     style={{ width: "40%" }}
+                    value={this.props.value}
                 />
             </div>);
     }
@@ -145,14 +154,9 @@ export class StringParameter extends Parameter {
         super(props);
 
         this.set = this.set.bind(this);
-
-        this.state = {
-            value: null
-        }
     }
 
     set(e) {
-        this.setState({ value: e.target.value });
         this.props.setValue(e.target.value);
         this.props.setIncluded(true);
     }
@@ -180,6 +184,7 @@ export class StringParameter extends Parameter {
                 type="text"
                 onChange={this.set}
                 style={{ width: "100%" }}
+                value={this.props.value}
             />
         </div>);
     }
@@ -196,16 +201,17 @@ export class EnumParameter extends Parameter {
             _map.push({ value: document.apiSpec.enums[props.param.type][type] });
         }
 
-        props.setValue(_map[0]);
+        if (!props.value) {
+            props.setValue(_map[0].value);
+        }
+        console.log('enum value  ', props.value)
 
         this.state = {
-            value: null,
             map: _map
         }
     }
 
     set(e) {
-        this.setState({ value: e.value });
         this.props.setValue(e.value);
     }
 
@@ -220,7 +226,7 @@ export class EnumParameter extends Parameter {
                     <span key="save" className="param_name">{this.props.param.name}</span>
                 </div>
                 <Select onSelect={this.set} className="__enum"
-                    selected={this.state.value} options={this.state.map} />
+                    selected={this.props.value ? this.props.value : this.state.map[0]} options={this.state.map} />
             </div>);
     }
 }
@@ -274,7 +280,7 @@ export class FileParameter extends Parameter {
                         checked={this.props.included}
                         onChange={event => { this.props.setIncluded(event.target.checked); }}
                     />
-                    <span key="save" className="param_name">{this.props.param.name}</span>
+                    <span key="save" className="param_name">{this.props.param.name + bounds}</span>
                 </div>
                 <input className="ph2 dark-grey choose_file"
                     type="file"
@@ -301,17 +307,20 @@ export class StructParameter extends Parameter {
             return 0;
         });
 
+        var saved = props.value;
+        console.log('struct constructor saved:', saved)
+
         var params = {};
         for (var param of struct) {
             params[param.name] = {
                 mandatory: param.mandatory === 'true',
-                included: param.mandatory === 'true',
-                value: undefined
+                included: saved ? saved[param.name] ? true : false : param.mandatory === 'true',
+                value: saved ? saved[param.name] : undefined
             }
         }
 
         this.state = {
-            value: null,
+            value: saved,
             parameters: params,
             collapsed: true
         }
@@ -322,11 +331,22 @@ export class StructParameter extends Parameter {
     }
 
     setIncluded(paramName, included) {
-        console.log('struct set included:', paramName, included);
         var params = this.state.parameters;
-        console.log('struct params:', this.state.parameters);
         params[paramName].included = included;
-        this.setState({ parameters: params });
+
+        var value = {};
+        for (var param in params) {
+            if (params[param].included) {
+                value[param] = params[param].value;
+            }
+        }
+
+        this.setState({ parameters: params, value: value });
+        console.log('StructParam setValue2', params, value);
+        this.props.setValue(value);
+        if (included) {
+            this.props.setIncluded(true);
+        }
     }
 
     setParamValue(paramName, val) {
@@ -336,12 +356,13 @@ export class StructParameter extends Parameter {
 
         var value = {};
         for (var param in params) {
-            if (param.included) {
+            if (params[param].included) {
                 value[param] = params[param].value;
             }
         }
 
         this.setState({ parameters: params, value: value });
+        console.log('StructParam setValue', params, value);
         this.props.setValue(value);
     }
 
@@ -354,7 +375,7 @@ export class StructParameter extends Parameter {
             var struct = document.apiSpec.structs[this.props.param.type];
             structDatas = (<div className="param_struct">
                 {
-                    struct.map(parameter => api2html(that, parameter))
+                    struct.map(parameter => api2html(that, parameter, this.state.parameters[parameter.name].value))
                 }
             </div>);
         }
@@ -380,9 +401,27 @@ export class ArrayParameter extends Parameter {
 
         this.addItem = this.addItem.bind(this);
 
+        var parameters = {};
+        var values = [];
+        if (props.value) {
+            props.setIncluded(true);
+            for (var elem in props.value) {
+                var param = Object.assign({}, props.param);
+                param.name += `[${Object.keys(parameters).length}]`;
+                delete param.array;
+
+                values.push(props.value[elem]);
+                parameters[param.name] = {
+                    mandatory: false,
+                    included: true,
+                    value: props.value[elem]
+                };
+            }
+        }
+
         this.state = {
-            value: null,
-            parameters: {}
+            parameters: parameters,
+            values: values
         }
     }
 
@@ -405,7 +444,6 @@ export class ArrayParameter extends Parameter {
     }
 
     setIncluded(id, included) {
-        console.log('array set included', id, included)
         var params = this.state.parameters;
         params[id].included = included;
         this.setState({ parameters: params });
@@ -418,7 +456,6 @@ export class ArrayParameter extends Parameter {
 
         var values = [];
         for (var param in params) {
-            console.log('adding value: ', params[param]);
             if (params[param].included) { values.push(params[param].value) };
         }
 
@@ -432,11 +469,12 @@ export class ArrayParameter extends Parameter {
         var structDatas = (<div className="param_struct">
             { this.state.paramsHtml }
             {
-                Object.keys(this.state.parameters).map(paramName => {
+                Object.keys(this.state.parameters).map(parameter => {
                     var param = Object.assign({}, this.props.param);
                     delete param.array;
-                    param.name = paramName;
-                    return api2html(that, param);
+                    param.name = parameter;
+                    console.log('making struct in array', param, this.state.parameters[parameter].value)
+                    return api2html(that, param, this.state.parameters[parameter].value);
                 })
             }
         </div>);

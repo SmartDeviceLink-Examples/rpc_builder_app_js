@@ -6,7 +6,6 @@ export default class FavRpcs extends React.Component {
     constructor(props) {
         super(props);
 
-        this.loadRpc = this.loadRpc.bind(this);
         this.importSavedRpcs = this.importSavedRpcs.bind(this);
         this.importFinished = this.importFinished.bind(this);
 
@@ -48,10 +47,6 @@ export default class FavRpcs extends React.Component {
         link.click();
     }
 
-    loadRpc(rpc) {
-        console.log('should load rpc', rpc)
-    }
-
     clickLoad() {
         var input = document.createElement("input");
         input.setAttribute("type", "file");
@@ -78,7 +73,7 @@ export default class FavRpcs extends React.Component {
             </div>
             <div class="fav_rpcs">
                 { this.state.savedRpcs.map(rpc => 
-                    <FavRpcOption rpc={rpc} handleClick={() => that.loadRpc(rpc)} />
+                    <FavRpcOption rpc={rpc} handleClick={() => that.props.loadSavedRpc(rpc)} />
                 )}
             </div>
         </div>);

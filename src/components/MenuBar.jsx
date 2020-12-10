@@ -6,6 +6,7 @@ import TableViewHeader from './TableViewHeader';
 import AppConfig from './menu/AppConfig'
 import RpcConfig from './menu/RpcConfig'
 import FavRpcs from './menu/FavRpcs'
+import RecentRpcOption from './menu/RecentRpcOption'
 
 export default class MenuBar extends React.Component {
     constructor(props) {
@@ -13,11 +14,16 @@ export default class MenuBar extends React.Component {
 
         this.setTableViewActive = this.setTableViewActive.bind(this);
         this.onConnect = this.onConnect.bind(this);
+        this.loadSavedRpc = this.loadSavedRpc.bind(this);
+        this.resetSavedRpc = this.resetSavedRpc.bind(this);
+        this.addRecentRpc = this.addRecentRpc.bind(this);
 
         this.state = {
             tableView: null,
             rpcVersion: undefined,
-            appConnected: false
+            appConnected: false,
+            savedRpc: undefined,
+            recentRpcs: []
         }
     }
 
@@ -71,8 +77,34 @@ export default class MenuBar extends React.Component {
         });
     }
 
+    resetSavedRpc() {
+        this.setState({ savedRpc: undefined });
+    }
+
+    loadSavedRpc(rpc) {
+        this.setState({ savedRpc: rpc });
+        this.setTableViewActive('mb-table', 'rpcconfig');
+    }
+
+    addRecentRpc(name, parameters) {
+        var recents = this.state.recentRpcs;
+        recents.push({
+            name: name,
+            parameters: parameters
+        });
+        console.log('addRecentRpc', name, parameters, this.state.recentRpcs)
+        this.setState({
+            recentRpcs: recents
+        });
+    }
+
     setTableViewActive(tableViewItem, itemId) {
         console.log(`setTableViewActive(${tableViewItem}, ${itemId})`);
+
+        if (this.state.tableView === 'rpcconfig') {
+            this.setState({ savedRpc: undefined });
+        }
+
         this.setState({ tableView: itemId });
     }
 
@@ -83,6 +115,7 @@ export default class MenuBar extends React.Component {
     }
 
     render() {
+        var that = this;
         return (<div className="menu-bar flex flex-column flex-item overflow-hidden bg-silver">
                 <TableView
                     id="mb-table"
@@ -110,7 +143,9 @@ export default class MenuBar extends React.Component {
                         label="Configure RPC"
                         className="ph3"
                     >
-                        <RpcConfig appServiceName="mediaServiceData"/>
+                        <RpcConfig appServiceName="mediaServiceData" 
+                            addRecentRpc={this.addRecentRpc} move={this.setTableViewActive}
+                            savedRpc={this.state.savedRpc} resetSaved={this.resetSavedRpc}/>
                     </TableViewItem>
                     <TableViewItem
                         onClick={this.setTableViewActive}
@@ -120,9 +155,16 @@ export default class MenuBar extends React.Component {
                         label="Favorite RPCs"
                         className="ph3"
                     >
-                        <FavRpcs appServiceName="mediaServiceData"/>
+                        <FavRpcs appServiceName="mediaServiceData" loadSavedRpc={this.loadSavedRpc}/>
                     </TableViewItem>
                     <TableViewHeader key="recent-header" label="Recently Used RPCs"/>
+                    <div className="fav_rpcs">
+                    {
+                        this.state.recentRpcs.map(rpc => (
+                            <RecentRpcOption rpc={rpc} loadSavedRpc={this.loadSavedRpc} handleClick={(rpc) => that.loadSavedRpc(rpc)} />
+                        ))
+                    }
+                    </div>
                 </TableView>
             </div>);
     }

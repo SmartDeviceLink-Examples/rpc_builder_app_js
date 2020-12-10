@@ -75,8 +75,8 @@ export default class Logs extends React.PureComponent {
             var namePrefix = '';
             var primaryColor = '#ffffff';
             var secondaryColor = '#ffffff';
-            if (rpc._messageType === 0) {
-                namePrefix = `[${rpc._correlationID}] `;
+            if (rpc._messageType === 0 && rpc._correlationID) {
+                namePrefix = `[IN ${rpc._correlationID}] `;
             } else if (rpc._messageType === 1) {
                 namePrefix = `[re: ${rpc._correlationID}] `;
                 var res = rpc._parameters.resultCode;

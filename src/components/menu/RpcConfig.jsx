@@ -15,8 +15,13 @@ export default class RpcConfig extends React.Component {
         this.genParams = this.genParams.bind(this);
         this.setIncluded = this.setIncluded.bind(this);
         this.setParamValue = this.setParamValue.bind(this);
+        this.getParamValue = this.getParamValue.bind(this);
 
-        var rpc = document.apiSpec.functions.Alert;
+        var saved = props.savedRpc;
+        console.log('rpcConfig.js prop', saved);
+        var rpcName = saved ? saved.rpc ? saved.rpc : saved.name : 'Alert';
+
+        var rpc = document.apiSpec.functions[rpcName];
 
         rpc.sort((a, b) => { 
             if (a.mandatory === 'true' && b.mandatory === 'false') {
@@ -32,13 +37,15 @@ export default class RpcConfig extends React.Component {
         for (var param of rpc) {
             params[param.name] = {
                 mandatory: param.mandatory === 'true',
-                included: param.mandatory === 'true',
-                value: undefined
+                included: saved ? saved.parameters[param.name] ? true : false : param.mandatory === 'true',
+                value: saved ? saved.parameters[param.name] : undefined
             }
         }
 
+        console.log('rpcConfig.js state', params)
+
         this.state = {
-            selectedRpcName: 'Alert',
+            selectedRpcName: rpcName,
             savedRpcName: undefined,
             saveRpc: false,
             parameters: params
@@ -46,21 +53,53 @@ export default class RpcConfig extends React.Component {
     }
 
     sendRpc() {
-        console.log('sendRPC: ', this.state.selectedRpcName);
         var value = {};
         var bulkData = null;
+        this.props.addRecentRpc(this.state.selectedRpcName, this.state.parameters);
         for (var param in this.state.parameters) {
             var pObj = this.state.parameters[param];
             if (param === 'bulkData' && pObj.included) { bulkData = pObj.value }
             else if (pObj.included) { value[param] = pObj.value }
         }
-        console.log('params: ', value, bulkData);
+        console.log('sendRPC: ', this.state.selectedRpcName, value, bulkData);
 
-        const rpc = new document.SDL.rpc.messages[this.rpcName]({ parameters: value });
+        const rpc = new document.SDL.rpc.messages[this.state.selectedRpcName]({ parameters: value });
         if (bulkData) {
             rpc.setBulkData(bulkData);
         }
         document.sdlManager.sendRpc(rpc);
+
+        if (this.state.saveRpc) {
+            var pendingSavedRpc = {
+                rpc: this.state.selectedRpcName,
+                name: this.state.savedRpcName,
+                parameters: value
+            }
+
+            var savedRpcs = localStorage.getItem('savedRpcs');
+            if (!savedRpcs) {
+                localStorage.setItem('savedRpcs', JSON.stringify([ pendingSavedRpc ], null, 4));
+            } else {
+                var json = JSON.parse(savedRpcs);
+                for (var _rpc of json) {
+                    if (_rpc.name === pendingSavedRpc.name) {
+                        alert('you already have a saved rpc with the same name');
+                        return;
+                    }
+                }
+                json.push(pendingSavedRpc);
+                var jsonStr = JSON.stringify(json, null, 4);
+                localStorage.setItem('savedRpcs', jsonStr);
+            }
+        }
+
+        this.props.resetSaved();
+        
+        if (this.state.saveRpc) {
+            this.props.move('mb-table', 'favrpcs');
+        } else {
+            this.props.move('mb-table', null);
+        }
     }
 
     setSavedRpcName(name) {
@@ -70,6 +109,7 @@ export default class RpcConfig extends React.Component {
     rpcSelected(rpcObj) {
         var name = rpcObj.value;
         var rpc = document.apiSpec.functions[name];
+        this.props.resetSaved();
 
         if (!rpc) {
             this.setState({ selectedRpcName: name });
@@ -112,9 +152,14 @@ export default class RpcConfig extends React.Component {
 
     setParamValue(paramName, value) {
         var params = this.state.parameters;
-        console.log('setParamValue params', params);
+        console.log('setParamValue', paramName, value, params);
         params[paramName].value = value;
         this.setState({ parameters: params });
+    }
+
+    getParamValue(paramName) {
+        var params = this.state.parameters;
+        return params[paramName].value;
     }
 
     genParams(rpcName) {
@@ -122,7 +167,9 @@ export default class RpcConfig extends React.Component {
             return [];
         }
 
-        return document.apiSpec.functions[rpcName].map(param => api2html(this, param));
+        console.log('gen params,', this.state.parameters)
+
+        return document.apiSpec.functions[rpcName].map(param => api2html(this, param, this.getParamValue(param.name)));
     }
 
     render() {
