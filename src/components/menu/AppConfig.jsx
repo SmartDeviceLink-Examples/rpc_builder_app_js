@@ -16,7 +16,8 @@ export default class AppConfig extends React.Component {
             appName: 'RPC Builder',
             appHMITypes: [],
             wsUrl: 'ws://',
-            wsPort: 2020
+            wsPort: 2020,
+            hashId: ''
         }
     }
 
@@ -49,6 +50,10 @@ export default class AppConfig extends React.Component {
         this.setState({ wsPort: port });
     }
 
+    setHashId(hash) {
+        this.setState({ hashId: hash });
+    }
+
     connectApp() {
         if (this.state.wsUrl === 'ws://') {
             alert('please fill in connection url');
@@ -60,11 +65,15 @@ export default class AppConfig extends React.Component {
         const SDL = require('../../public/SDL.min.js');
         document.SDL = SDL;
 
+        var hashId = this.state.hashId === '' ? null : this.state.hashId;
+
         const lifecycleConfig = new SDL.manager.LifecycleConfig()
             .setAppId(this.state.appId)
             .setAppName(this.state.appName)
             .setLanguageDesired(SDL.rpc.enums.Language.EN_US)
-            .setAppTypes(this.state.appHMITypes);
+            .setAppTypes(this.state.appHMITypes)
+            .setVrSynonyms([ this.state.appName ])
+            .setResumeHash(hashId);
 
         lifecycleConfig.setTransportConfig(new SDL.transport.WebSocketClientConfig(this.state.wsUrl, this.state.wsPort));
 
@@ -168,8 +177,14 @@ export default class AppConfig extends React.Component {
                     onChange={event => this.setWsPort(event.target.value)}
                     //style={{width: "100%", paddingTop: ".5rem", paddingBottom: ".5rem"}}
                 />
+                <span className="fw5 mt2">Hash ID</span>
+                <input className="br2 ba ph2 dark-grey "
+                    value={this.state.hashId}
+                    onChange={event => this.setHashId(event.target.value)}
+                    //style={{width: "100%", paddingTop: ".5rem", paddingBottom: ".5rem"}}
+                />
                 <button 
-                    className="bn br2 outline-0 w-40 black bg-grey--dark cursor-pointer active-bg-manticore-blue active-white mt4"
+                    className="bn br2 outline-0 w-100 black bg-grey--dark cursor-pointer active-bg-manticore-blue active-white mt4"
                     onClick={this.connectApp}
                     style={{ paddingTop: "5px", paddingBottom: "5px" }}
                     >Connect</button>
