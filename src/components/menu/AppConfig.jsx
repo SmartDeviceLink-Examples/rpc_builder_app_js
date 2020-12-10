@@ -128,6 +128,16 @@ export default class AppConfig extends React.Component {
             console.log('RECV', message);
             if (!message) { return; }
             if (document.logRpc) { document.logRpc(message); }
+            if (message._messageType === 0 && message._functionName === 'GetAppServiceData') {
+                setTimeout(() => { // incoming app service data subscription request, ask user how to reply
+                    var response = new document.SDL.rpc.messages.GetAppServiceDataResponse();
+                    response.setCorrelationId(message._correlationID);
+                    var allow = window.confirm(`request to subscribe to $asd_type app service data, allow or deny?`);
+                    response.setSuccess(allow);
+                    response.setResultCode(allow ? "SUCCESS" : "REJECTED");
+                    document.sdlManager._lifecycleManager.sendRpcMessage(response);
+                }, 5);
+            }
             return recvFunc.call(document.sdlManager._lifecycleManager, message);
         };
 
