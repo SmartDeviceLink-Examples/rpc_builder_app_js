@@ -71,6 +71,7 @@ export default class AppConfig extends React.Component {
             .setAppName(this.state.appName)
             .setLanguageDesired(SDL.rpc.enums.Language.EN_US)
             .setAppTypes(this.state.appHMITypes)
+            .setVrSynonyms([ this.state.appName ])
             .setResumeHash(this.state.hashId);
 
         lifecycleConfig.setTransportConfig(new SDL.transport.WebSocketClientConfig(this.state.wsUrl, this.state.wsPort));
