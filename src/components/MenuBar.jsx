@@ -161,7 +161,7 @@ export default class MenuBar extends React.Component {
                     <div className="fav_rpcs">
                     {
                         this.state.recentRpcs.map(rpc => (
-                            <RecentRpcOption rpc={rpc} loadSavedRpc={this.loadSavedRpc} handleClick={(rpc) => that.loadSavedRpc(rpc)} />
+                            <RecentRpcOption rpc={rpc} handleClick={(rpc) => that.loadSavedRpc(rpc)} />
                         ))
                     }
                     </div>

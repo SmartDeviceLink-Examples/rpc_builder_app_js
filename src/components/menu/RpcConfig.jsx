@@ -55,7 +55,6 @@ export default class RpcConfig extends React.Component {
     sendRpc() {
         var value = {};
         var bulkData = null;
-        this.props.addRecentRpc(this.state.selectedRpcName, this.state.parameters);
         for (var param in this.state.parameters) {
             var pObj = this.state.parameters[param];
             if (param === 'bulkData' && pObj.included) { bulkData = pObj.value }
@@ -69,6 +68,7 @@ export default class RpcConfig extends React.Component {
         }
         document.sdlManager.sendRpc(rpc);
 
+        this.props.addRecentRpc(this.state.selectedRpcName, value);
         if (this.state.saveRpc) {
             var pendingSavedRpc = {
                 rpc: this.state.selectedRpcName,
