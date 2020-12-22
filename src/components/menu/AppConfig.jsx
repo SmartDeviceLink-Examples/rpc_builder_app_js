@@ -124,9 +124,17 @@ export default class AppConfig extends React.Component {
         // log incoming RPCs
         const recvFunc = document.sdlManager._lifecycleManager._handleRpc;
         document.sdlManager._lifecycleManager._handleRpc = async (message) => {
-            console.log('RECV', message);
-            if (!message) { return; }
             if (document.logRpc) { document.logRpc(message); }
+            if (message && message._messageType === 0 && message._functionName === 'GetAppServiceData') {
+                setTimeout(() => { // incoming app service data subscription request, ask user how to reply
+                    var response = new document.SDL.rpc.messages.GetAppServiceDataResponse();
+                    response.setCorrelationId(message._correlationID);
+                    var allow = window.confirm(`request to subscribe to ${message.getParameter('serviceType')} app service data, allow or deny?`);
+                    response.setSuccess(allow);
+                    response.setResultCode(allow ? "SUCCESS" : "REJECTED");
+                    document.sdlManager._lifecycleManager.sendRpcMessage(response);
+                }, 5);
+            }
             return recvFunc.call(document.sdlManager._lifecycleManager, message);
         };
 
