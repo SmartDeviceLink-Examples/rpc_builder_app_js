@@ -9,6 +9,7 @@ export default class AppConfig extends React.Component {
         this.toggleHMIType = this.toggleHMIType.bind(this);
         this.setWsUrl = this.setWsUrl.bind(this);
         this.setWsPort = this.setWsPort.bind(this);
+        this.setHashId = this.setHashId.bind(this);
         this.connectApp = this.connectApp.bind(this);
 
         this.state = {
@@ -16,7 +17,8 @@ export default class AppConfig extends React.Component {
             appName: 'RPC Builder',
             appHMITypes: [],
             wsUrl: 'ws://',
-            wsPort: 2020
+            wsPort: 2020,
+            hashId: null
         }
     }
 
@@ -49,6 +51,10 @@ export default class AppConfig extends React.Component {
         this.setState({ wsPort: port });
     }
 
+    setHashId(hash) {
+        this.setState({ hashId: hash });
+    }
+
     connectApp() {
         if (this.state.wsUrl === 'ws://') {
             alert('please fill in connection url');
@@ -64,7 +70,8 @@ export default class AppConfig extends React.Component {
             .setAppId(this.state.appId)
             .setAppName(this.state.appName)
             .setLanguageDesired(SDL.rpc.enums.Language.EN_US)
-            .setAppTypes(this.state.appHMITypes);
+            .setAppTypes(this.state.appHMITypes)
+            .setResumeHash(this.state.hashId);
 
         lifecycleConfig.setTransportConfig(new SDL.transport.WebSocketClientConfig(this.state.wsUrl, this.state.wsPort));
 
@@ -166,6 +173,12 @@ export default class AppConfig extends React.Component {
                 <input className="br2 ba ph2 dark-grey "
                     value={this.state.wsPort}
                     onChange={event => this.setWsPort(event.target.value)}
+                    //style={{width: "100%", paddingTop: ".5rem", paddingBottom: ".5rem"}}
+                />
+                <span className="fw5 mt2">Hash ID</span>
+                <input className="br2 ba ph2 dark-grey"
+                    value={this.state.hashId}
+                    onChange={event => this.setHashId(event.target.value)}
                     //style={{width: "100%", paddingTop: ".5rem", paddingBottom: ".5rem"}}
                 />
                 <button 
