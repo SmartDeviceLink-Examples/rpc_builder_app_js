@@ -18,7 +18,6 @@ export default class RpcConfig extends React.Component {
         this.getParamValue = this.getParamValue.bind(this);
 
         var saved = props.savedRpc;
-        console.log('rpcConfig.js prop', saved);
         var rpcName = saved ? saved.rpc ? saved.rpc : saved.name : 'Alert';
 
         var rpc = document.apiSpec.functions[rpcName];
@@ -42,8 +41,6 @@ export default class RpcConfig extends React.Component {
             }
         }
 
-        console.log('rpcConfig.js state', params)
-
         this.state = {
             selectedRpcName: rpcName,
             savedRpcName: undefined,
@@ -60,7 +57,6 @@ export default class RpcConfig extends React.Component {
             if (param === 'bulkData' && pObj.included) { bulkData = pObj.value }
             else if (pObj.included) { value[param] = pObj.value }
         }
-        console.log('sendRPC: ', this.state.selectedRpcName, value, bulkData);
 
         const rpc = new document.SDL.rpc.messages[this.state.selectedRpcName]({ parameters: value });
         if (bulkData) {
@@ -152,7 +148,6 @@ export default class RpcConfig extends React.Component {
 
     setParamValue(paramName, value) {
         var params = this.state.parameters;
-        console.log('setParamValue', paramName, value, params);
         params[paramName].value = value;
         this.setState({ parameters: params });
     }
@@ -166,8 +161,6 @@ export default class RpcConfig extends React.Component {
         if (!document.apiSpec.functions[rpcName]) {
             return [];
         }
-
-        console.log('gen params,', this.state.parameters)
 
         return document.apiSpec.functions[rpcName].map(param => api2html(this, param, this.getParamValue(param.name)));
     }

@@ -61,8 +61,6 @@ export default class AppConfig extends React.Component {
             return;
         }
 
-        console.log('connecting app: ', this.state);
-
         const SDL = require('../../public/SDL.min.js');
         document.SDL = SDL;
 
@@ -115,7 +113,6 @@ export default class AppConfig extends React.Component {
         // log outgoing RPCs
         const sendFunc = document.sdlManager._lifecycleManager.sendRpcMessage;
         document.sdlManager._lifecycleManager.sendRpcMessage = async (message) => {
-            console.log('SEND', message);
             if (!message) { return; }
             if (document.logRpc) { document.logRpc(message); }
             return sendFunc.call(document.sdlManager._lifecycleManager, message);
@@ -124,8 +121,9 @@ export default class AppConfig extends React.Component {
         // log incoming RPCs
         const recvFunc = document.sdlManager._lifecycleManager._handleRpc;
         document.sdlManager._lifecycleManager._handleRpc = async (message) => {
+            if (!message) { return; }
             if (document.logRpc) { document.logRpc(message); }
-            if (message && message._messageType === 0 && message._functionName === 'GetAppServiceData') {
+            if (message._messageType === 0 && message._functionName === 'GetAppServiceData') {
                 setTimeout(() => { // incoming app service data subscription request, ask user how to reply
                     var response = new document.SDL.rpc.messages.GetAppServiceDataResponse();
                     response.setCorrelationId(message._correlationID);
