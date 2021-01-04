@@ -96,15 +96,12 @@ export default class MenuBar extends React.Component {
             name: name,
             parameters: parameters
         });
-        console.log('addRecentRpc', name, parameters, this.state.recentRpcs)
         this.setState({
             recentRpcs: recents
         });
     }
 
     setTableViewActive(tableViewItem, itemId) {
-        console.log(`setTableViewActive(${tableViewItem}, ${itemId})`);
-
         if (this.state.tableView === 'rpcconfig') {
             this.setState({ savedRpc: undefined });
         }
@@ -114,7 +111,6 @@ export default class MenuBar extends React.Component {
 
     onConnect() {
         this.setTableViewActive('mb-table', null);
-        console.log('on-connect');
         this.setState({ appConnected: true });
     }
 
@@ -165,7 +161,7 @@ export default class MenuBar extends React.Component {
                     <div className="fav_rpcs">
                     {
                         this.state.recentRpcs.map(rpc => (
-                            <RecentRpcOption rpc={rpc} loadSavedRpc={this.loadSavedRpc} handleClick={(rpc) => that.loadSavedRpc(rpc)} />
+                            <RecentRpcOption rpc={rpc} handleClick={(rpc) => that.loadSavedRpc(rpc)} />
                         ))
                     }
                     </div>

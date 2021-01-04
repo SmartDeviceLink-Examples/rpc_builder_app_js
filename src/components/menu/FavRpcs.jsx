@@ -22,7 +22,6 @@ export default class FavRpcs extends React.Component {
     }
 
     importSavedRpcs(input) {
-        console.log('importSavedRpcs', input);
         var file = input.files[0];
         var reader = new FileReader();
         reader.onload = this.importFinished;
@@ -30,13 +29,11 @@ export default class FavRpcs extends React.Component {
     }
 
     importFinished(event) {
-        console.log('importFinished', event);
         var b64data = event.target.result;
         var jsonStr = atob(b64data.substring(b64data.indexOf(",") + 1));
         var json = JSON.parse(jsonStr);
         this.setState({ savedRpcs: json });
         jsonStr = JSON.stringify(json, null, 4);
-        console.log('localStorage.setItem', jsonStr);
         localStorage.setItem('savedRpcs', jsonStr);
     }
 

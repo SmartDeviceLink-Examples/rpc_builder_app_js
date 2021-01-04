@@ -9,6 +9,7 @@ export default class AppConfig extends React.Component {
         this.toggleHMIType = this.toggleHMIType.bind(this);
         this.setWsUrl = this.setWsUrl.bind(this);
         this.setWsPort = this.setWsPort.bind(this);
+        this.setHashId = this.setHashId.bind(this);
         this.connectApp = this.connectApp.bind(this);
 
         this.state = {
@@ -59,8 +60,6 @@ export default class AppConfig extends React.Component {
             alert('please fill in connection url');
             return;
         }
-
-        console.log('connecting app: ', this.state);
 
         const SDL = require('../../public/SDL.min.js');
         document.SDL = SDL;
@@ -116,7 +115,6 @@ export default class AppConfig extends React.Component {
         // log outgoing RPCs
         const sendFunc = document.sdlManager._lifecycleManager.sendRpcMessage;
         document.sdlManager._lifecycleManager.sendRpcMessage = async (message) => {
-            console.log('SEND', message);
             if (!message) { return; }
             if (document.logRpc) { document.logRpc(message); }
             return sendFunc.call(document.sdlManager._lifecycleManager, message);
@@ -125,7 +123,6 @@ export default class AppConfig extends React.Component {
         // log incoming RPCs
         const recvFunc = document.sdlManager._lifecycleManager._handleRpc;
         document.sdlManager._lifecycleManager._handleRpc = async (message) => {
-            console.log('RECV', message);
             if (!message) { return; }
             if (document.logRpc) { document.logRpc(message); }
             if (message._messageType === 0 && message._functionName === 'GetAppServiceData') {
@@ -188,12 +185,12 @@ export default class AppConfig extends React.Component {
                     //style={{width: "100%", paddingTop: ".5rem", paddingBottom: ".5rem"}}
                 />
                 <span className="fw5 mt2">Hash ID</span>
-                <input className="br2 ba ph2 dark-grey "
+                <input className="br2 ba ph2 dark-grey"
                     value={this.state.hashId}
                     onChange={event => this.setHashId(event.target.value)}
                     //style={{width: "100%", paddingTop: ".5rem", paddingBottom: ".5rem"}}
                 />
-                <button 
+                <button
                     className="bn br2 outline-0 w-100 black bg-grey--dark cursor-pointer active-bg-manticore-blue active-white mt4"
                     onClick={this.connectApp}
                     style={{ paddingTop: "5px", paddingBottom: "5px" }}

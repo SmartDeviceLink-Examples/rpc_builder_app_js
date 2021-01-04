@@ -5,7 +5,6 @@ import Select from '../Select';
 
 export function api2html(that, param, value = undefined) {
     if (param.array === 'true') {
-        console.log('creating ArrayParameter value', value)
         return (<ArrayParameter param={param} included={that.state.parameters[param.name].included}
             value={value}
             setIncluded={(included) => that.setIncluded(param.name, included)} 
@@ -210,7 +209,6 @@ export class EnumParameter extends Parameter {
         if (!props.value) {
             props.setValue(_map[0].value);
         }
-        console.log('enum value  ', props.value)
 
         this.state = {
             map: _map
@@ -314,7 +312,6 @@ export class StructParameter extends Parameter {
         });
 
         var saved = props.value;
-        console.log('struct constructor saved:', saved)
 
         var params = {};
         for (var param of struct) {
@@ -348,7 +345,6 @@ export class StructParameter extends Parameter {
         }
 
         this.setState({ parameters: params, value: value });
-        console.log('StructParam setValue2', params, value);
         this.props.setValue(value);
         if (included) {
             this.props.setIncluded(true);
@@ -368,7 +364,6 @@ export class StructParameter extends Parameter {
         }
 
         this.setState({ parameters: params, value: value });
-        console.log('StructParam setValue', params, value);
         this.props.setValue(value);
     }
 
@@ -479,7 +474,6 @@ export class ArrayParameter extends Parameter {
                     var param = Object.assign({}, this.props.param);
                     delete param.array;
                     param.name = parameter;
-                    console.log('making struct in array', param, this.state.parameters[parameter].value)
                     return api2html(that, param, this.state.parameters[parameter].value);
                 })
             }

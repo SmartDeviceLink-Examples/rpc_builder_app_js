@@ -70,8 +70,6 @@ export default class Logs extends React.PureComponent {
     componentWillMount() {
         var that = this;
         document.logRpc = function(rpc) {
-            console.log('rpc: ', rpc);
-
             var namePrefix = '';
             var primaryColor = '#ffffff';
             var secondaryColor = '#ffffff';
@@ -119,7 +117,6 @@ export default class Logs extends React.PureComponent {
             return isAllowed;
         }
         const filteredLogs = this.state.logs.filter(multiFilter);
-        console.log('rendering ', filteredLogs.length, 'logs');
 
         return (
             <LogScroll maxViewableItems={100} scrollSensitivity={20}>
