@@ -1,8 +1,31 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# RPC Builder JS
+
+RPC Builder JS is a web application that can dynamically create RPCs and interact with SDL Core. This is useful for testing SDL implementations.
+
+<img width="1246" alt="rpcbjs_preview.png" src="https://user-images.githubusercontent.com/12716076/103576777-a9c6a080-4ea1-11eb-91ac-86af8034e8d6.png">
+
+## Dependencies
+
+RPC Builder JS is built using [create-react-app](https://facebook.github.io/create-react-app/docs/getting-started).
+
+RPC Builder JS is built on top of the [sdl_javascript_suite](https://github.com/smartdevicelink/sdl_javascript_suite) and includes SDL.min.js from [release 1.0.0](https://github.com/smartdevicelink/sdl_javascript_suite/tree/1.0.0).
+
+## Installation
+
+```bash
+git clone https://github.com/SmartDeviceLink-Examples/rpc_builder_app_js
+cd rpc_builder_app_js
+npm install
+```
+
+## Usage
+
+```bash
+cd rpc_builder_app_js
+npm run start
+```
 
 ## Available Scripts
-
-In the project directory, you can run:
 
 ### `npm start`
 
@@ -11,11 +34,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.<br />
 You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
 ### `npm run build`
 
@@ -27,42 +45,91 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+### `npm run api`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Changes which version of the rpc_spec this app will use.<br />
+Example usage: `npm run api origin smartdevicelink develop`
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+This command will build the sdl_javascript_suite locally, and modify where the app will be pulling its MOBILE_API.xml
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Saved RPCs
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+RPCs can be saved from the construct RPC view.
+RPCs are saved to local webkit storage, but can be exported in JSON format.
 
-## Learn More
+Example JSON of some testing RPCs:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+```json
+{
+    "rpc": "ListFiles",
+    "parameters": {},
+    "name": "listFiles"
+},
+{
+    "rpc": "SubtleAlert",
+    "parameters": {
+        "alertText1": "hello",
+        "alertText2": "world",
+        "playTone": true,
+        "cancelID": 42
+    },
+    "name": "subtleHelloWorld"
+},
+{
+    "rpc": "SubtleAlert",
+    "parameters": {
+        "alertText1": "hello",
+        "alertText2": "world",
+        "duration": 10000,
+        "playTone": true,
+        "softButtons": [
+            {
+                "type": "IMAGE",
+                "softButtonID": 51,
+                "text": "sb1",
+                "image": {
+                    "value": "0x25",
+                    "imageType": "STATIC",
+                    "isTemplate": true
+                },
+                "isHighlighted": true,
+                "systemAction": "DEFAULT_ACTION"
+            },
+            {
+                "type": "IMAGE",
+                "softButtonID": 52,
+                "text": "sb2",
+                "image": {
+                    "value": "0x27",
+                    "imageType": "STATIC",
+                    "isTemplate": true
+                },
+                "isHighlighted": true,
+                "systemAction": "DEFAULT_ACTION"
+            }
+        ],
+        "alertIcon": {
+            "value": "0x21",
+            "imageType": "STATIC",
+            "isTemplate": true
+        },
+        "cancelID": 42
+    },
+    "name": "subtle2sb"
+},
+{
+    "rpc": "PutFile",
+    "parameters": {
+        "syncFileName": "AppIcon",
+        "fileType": "GRAPHIC_PNG",
+        "persistentFile": true
+    },
+    "bulkData": [
+        60,
+        33,
+        ...
+        62
+    ],
+    "name": "putFileAppIcon"
+}
+```
