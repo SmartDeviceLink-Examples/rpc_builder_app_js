@@ -43,5 +43,11 @@ else
     exit 2
 fi
 
-sed -i "" -e "s:var remote = \'.*\';:var remote = \'$GH_REMOTE_NAME\';:" ../src/components/MenuBar.jsx
-sed -i "" -e "s:var branch = \'.*\';:var branch = \'$BRANCH\';:" ../src/components/MenuBar.jsx
+if [[ "$OSTYPE" == "darwin"* ]]
+then
+    sed -i "" -e "s:var remote = \'.*\';:var remote = \'$GH_REMOTE_NAME\';:" ../src/components/MenuBar.jsx
+    sed -i "" -e "s:var branch = \'.*\';:var branch = \'$BRANCH\';:" ../src/components/MenuBar.jsx
+else
+    sed -i -e "s:var remote = \'.*\';:var remote = \'$GH_REMOTE_NAME\';:" ../src/components/MenuBar.jsx
+    sed -i -e "s:var branch = \'.*\';:var branch = \'$BRANCH\';:" ../src/components/MenuBar.jsx
+fi
