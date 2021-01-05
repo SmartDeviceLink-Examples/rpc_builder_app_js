@@ -34,7 +34,7 @@ npm run build
 
 if [ -f "lib/js/dist/SDL.min.js" ]
 then
-  cp lib/js/dist/SDL.min.js ../src/public/.
+    cp lib/js/dist/SDL.min.js ../src/public/.
 elif [ -f "dist/js/SDL.min.js" ]
 then
     cp dist/js/SDL.min.js ../src/public/.
@@ -45,9 +45,11 @@ fi
 
 if [[ "$OSTYPE" == "darwin"* ]]
 then
+    sed -i "" -e "1s;^;/* eslint-disable */ ;" src/public/SDL.min.js
     sed -i "" -e "s:var remote = \'.*\';:var remote = \'$GH_REMOTE_NAME\';:" ../src/components/MenuBar.jsx
     sed -i "" -e "s:var branch = \'.*\';:var branch = \'$BRANCH\';:" ../src/components/MenuBar.jsx
 else
+    sed -i -e "1s;^;/* eslint-disable */ ;" ../src/public/SDL.min.js
     sed -i -e "s:var remote = \'.*\';:var remote = \'$GH_REMOTE_NAME\';:" ../src/components/MenuBar.jsx
     sed -i -e "s:var branch = \'.*\';:var branch = \'$BRANCH\';:" ../src/components/MenuBar.jsx
 fi
