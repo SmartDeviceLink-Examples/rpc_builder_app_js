@@ -134,6 +134,42 @@ export default class AppConfig extends React.Component {
                     response.setResultCode(allow ? "SUCCESS" : "REJECTED");
                     document.sdlManager._lifecycleManager.sendRpcMessage(response);
                 }, 5);
+            } else if (message._functionName === 'OnSystemRequest') {
+                if (message._parameters?.url) {
+                    if (message._parameters.requestType === document.SDL.rpc.enums.RequestType.PROPRIETARY
+                    && 'JSON' === message._parameters.fileType) {
+                        setTimeout(() => {
+                            let utf8decoder = new TextDecoder();
+                            var bulkDataJson = JSON.parse(utf8decoder.decode(message._bulkData));
+                            var httpHeaders = bulkDataJson['HTTPRequest']['headers'];
+                            var httpBody = bulkDataJson['HTTPRequest']['body'].toString();
+
+                            var _headers = {};
+                            if (httpHeaders.ContentType) {
+                                _headers['Content-Type'] = httpHeaders.ContentType;
+                            }
+                            if (httpHeaders['Content-Length']) {
+                                _headers['Content-Length'] = httpHeaders['Content-Length'];
+                            }
+
+                            fetch(message._parameters.url, { 
+                                method: 'POST', headers: _headers, body: httpBody
+                            }).then(async(res) => {
+                                if (res.ok) {
+                                    var osrResponse = new document.SDL.rpc.messages.SystemRequest();
+                                    osrResponse.setCorrelationId(65535);
+                                    osrResponse.setRequestType(document.SDL.rpc.enums.RequestType.PROPRIETARY);
+                                    var uint8encoder = new TextEncoder();
+                                    osrResponse.setBulkData(uint8encoder.encode(await res.text()));
+                                    console.log("GOT PTU: ", osrResponse);
+                                    document.sdlManager._lifecycleManager.sendRpcMessage(osrResponse);
+                                } else {
+                                    console.warn('PTU URL returned bad status code', res.status, res.statusText);
+                                }
+                            });
+                        }, 5);
+                    }
+                }
             }
             return recvFunc.call(document.sdlManager._lifecycleManager, message);
         };
