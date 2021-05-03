@@ -10,6 +10,7 @@ export default class AppConfig extends React.Component {
         this.setWsUrl = this.setWsUrl.bind(this);
         this.setWsPort = this.setWsPort.bind(this);
         this.setHashId = this.setHashId.bind(this);
+        this.setPtuOverrideUrl = this.setPtuOverrideUrl.bind(this);
         this.connectApp = this.connectApp.bind(this);
 
         this.state = {
