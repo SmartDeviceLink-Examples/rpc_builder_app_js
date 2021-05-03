@@ -29,14 +29,15 @@ export default class MenuBar extends React.Component {
 
     componentWillMount() {
         var remote = 'smartdevicelink';
-        var branch = 'master';
+        var branch = 'develop';
 
+        const mobileSentNotifications = [ 'OnAppCapabilityUpdated', 'OnAppServiceData' ]
         var that = this;
         fetch(`https://raw.githubusercontent.com/${remote}/rpc_spec/${branch}/MOBILE_API.xml`).then((res) => res.text()).then((xml) => {
             var xml2json = function(node) {
-                if (node.nodeName === 'struct' || (node.nodeName === 'function' && node.attributes && node.attributes.messagetype 
-                     && (node.attributes.messagetype.nodeValue === 'request' || node.attributes.name.nodeValue === 'OnAppServiceData'))) {
-                        document.apiSpec[node.nodeName + 's'][node.attributes.name.nodeValue] = 
+                if (node.nodeName === 'struct' || (node.nodeName === 'function' && node.attributes && node.attributes.messagetype
+                     && (node.attributes.messagetype.nodeValue === 'request' || mobileSentNotifications.includes(node.attributes.name.nodeValue)))) {
+                        document.apiSpec[node.nodeName + 's'][node.attributes.name.nodeValue] =
                             [...node.childNodes].filter(x => x.tagName === 'param').map(child => {
                                 var param = {};
                                 for (var attrib of child.attributes) {
@@ -45,7 +46,7 @@ export default class MenuBar extends React.Component {
                                 return param;
                             });
                 } else if (node.nodeName === 'enum') {
-                    document.apiSpec.enums[node.attributes.name.nodeValue] = 
+                    document.apiSpec.enums[node.attributes.name.nodeValue] =
                         [...node.childNodes].filter(child => child.tagName === 'element').map(element => {
                             return element.attributes.name.nodeValue;
                         })
@@ -143,7 +144,7 @@ export default class MenuBar extends React.Component {
                         label="Configure RPC"
                         className="ph3"
                     >
-                        <RpcConfig appServiceName="mediaServiceData" 
+                        <RpcConfig appServiceName="mediaServiceData"
                             addRecentRpc={this.addRecentRpc} move={this.setTableViewActive}
                             savedRpc={this.state.savedRpc} resetSaved={this.resetSavedRpc}/>
                     </TableViewItem>
