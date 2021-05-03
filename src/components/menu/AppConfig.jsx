@@ -18,7 +18,8 @@ export default class AppConfig extends React.Component {
             appHMITypes: [],
             wsUrl: 'ws://',
             wsPort: 2020,
-            hashId: ''
+            hashId: '',
+            ptuUrlOverride: ''
         }
     }
 
@@ -53,6 +54,10 @@ export default class AppConfig extends React.Component {
 
     setHashId(hash) {
         this.setState({ hashId: hash });
+    }
+
+    setPtuOverrideUrl(url) {
+        this.setState({ ptuUrlOverride: url });
     }
 
     connectApp() {
@@ -152,7 +157,7 @@ export default class AppConfig extends React.Component {
                                 _headers['Content-Length'] = httpHeaders['Content-Length'];
                             }
 
-                            fetch(message._parameters.url, { 
+                            fetch(this.state.ptuUrlOverride.length ? this.state.ptuUrlOverride : message._parameters.url, { 
                                 method: 'POST', headers: _headers, body: httpBody
                             }).then(async(res) => {
                                 if (res.ok) {
@@ -168,6 +173,20 @@ export default class AppConfig extends React.Component {
                                 }
                             });
                         }, 5);
+                    } else if (message._parameters.requestType === document.SDL.rpc.enums.RequestType.ICON_URL
+                        && 'HTTP' === message._parameters.fileType) {
+                        setTimeout(fetch(message._parameters.url).then((res) => {
+                            if (res.ok) {
+                                var osrResponse = new document.SDL.rpc.messages.SystemRequest();
+                                osrResponse.setFileName(message._parameters.url);
+                                osrResponse.setRequestType(document.SDL.rpc.enums.RequestType.ICON_URL);
+                                osrResponse.setBulkData(res.body());
+                                console.log("GOT ICON: ", osrResponse);
+                                document.sdlManager._lifecycleManager.sendRpcMessage(osrResponse);
+                            } else {
+                                console.warn('ICON URL returned bad status code', res.status, res.statusText);
+                            }
+                        }), 5);
                     }
                 }
             }
@@ -224,6 +243,12 @@ export default class AppConfig extends React.Component {
                 <input className="br2 ba ph2 dark-grey"
                     value={this.state.hashId}
                     onChange={event => this.setHashId(event.target.value)}
+                    //style={{width: "100%", paddingTop: ".5rem", paddingBottom: ".5rem"}}
+                />
+                <span className="fw5 mt2">PTU URL Override</span>
+                <input className="br2 ba ph2 dark-grey"
+                    value={this.state.ptuUrlOverride}
+                    onChange={event => this.setPtuOverrideUrl(event.target.value)}
                     //style={{width: "100%", paddingTop: ".5rem", paddingBottom: ".5rem"}}
                 />
                 <button
