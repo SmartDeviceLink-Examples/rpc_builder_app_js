@@ -150,6 +150,14 @@ export default class AppConfig extends React.Component {
                     response.setResultCode(allow ? "SUCCESS" : "REJECTED");
                     document.sdlManager._lifecycleManager.sendRpcMessage(response);
                 }, 5);
+            } else if (message._functionName === 'OnHashChange') {
+                var prevStateStr = localStorage.getItem('lastAppState');
+        
+                if (null !== prevStateStr) {
+                    var prevState = JSON.parse(prevStateStr);
+                    prevState.hashId = message._parameters.hashID;
+                    localStorage.setItem('lastAppState', JSON.stringify(prevState));
+                }
             } else if (message._functionName === 'OnSystemRequest') {
                 if (message._parameters?.url) {
                     if (message._parameters.requestType === document.SDL.rpc.enums.RequestType.PROPRIETARY
