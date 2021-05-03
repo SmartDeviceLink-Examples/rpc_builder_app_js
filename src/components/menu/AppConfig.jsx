@@ -13,6 +13,16 @@ export default class AppConfig extends React.Component {
         this.setPtuOverrideUrl = this.setPtuOverrideUrl.bind(this);
         this.connectApp = this.connectApp.bind(this);
 
+        var prevStateStr = localStorage.getItem('lastAppState');
+
+        if (null !== prevStateStr) {
+            var prevState = JSON.parse(prevStateStr);
+            if (prevState.appId) {
+                this.state = prevState;
+                return;
+            }
+        }
+
         this.state = {
             appId: 'rpcb-js',
             appName: 'RPC Builder',
@@ -194,6 +204,8 @@ export default class AppConfig extends React.Component {
             return recvFunc.call(document.sdlManager._lifecycleManager, message);
         };
 
+        localStorage.setItem('lastAppState', JSON.stringify(this.state));
+
         this.props.onConnect();
     }
 
@@ -204,6 +216,7 @@ export default class AppConfig extends React.Component {
             return (<div className="flex flex-row" key={type}>
             <input className="br2 ba ph2 dark-grey "
                 type="checkbox"
+                checked={this.state.appHMITypes.includes(type)}
                 onChange={event => this.toggleHMIType(type)}
                 //style={{width: "100%", paddingTop: ".5rem", paddingBottom: ".5rem"}}
             />
