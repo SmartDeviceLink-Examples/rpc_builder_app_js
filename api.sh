@@ -45,7 +45,7 @@ fi
 
 if [[ "$OSTYPE" == "darwin"* ]]
 then
-    sed -i "" -e "1s;^;/* eslint-disable */ ;" src/public/SDL.min.js
+    sed -i "" -e "1s;^;/* eslint-disable */ ;" ../src/public/SDL.min.js
     sed -i "" -e "s:var remote = \'.*\';:var remote = \'$GH_REMOTE_NAME\';:" ../src/components/MenuBar.jsx
     sed -i "" -e "s:var branch = \'.*\';:var branch = \'$BRANCH\';:" ../src/components/MenuBar.jsx
 else
