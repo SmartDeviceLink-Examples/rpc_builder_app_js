@@ -36,7 +36,7 @@ export default class RpcConfig extends React.Component {
         for (var param of rpc) {
             params[param.name] = {
                 mandatory: param.mandatory === 'true',
-                included: saved ? saved.parameters[param.name] ? true : false : param.mandatory === 'true',
+                included: saved ? saved.parameters[param.name] !== undefined : param.mandatory === 'true',
                 value: saved ? saved.parameters[param.name] : undefined
             }
         }

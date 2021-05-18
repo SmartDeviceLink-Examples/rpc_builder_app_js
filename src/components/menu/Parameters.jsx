@@ -317,7 +317,7 @@ export class StructParameter extends Parameter {
         for (var param of struct) {
             params[param.name] = {
                 mandatory: param.mandatory === 'true',
-                included: saved ? saved[param.name] ? true : false : param.mandatory === 'true',
+                included: saved ? saved[param.name] !== undefined : param.mandatory === 'true',
                 value: saved ? saved[param.name] : undefined
             }
         }
@@ -354,7 +354,6 @@ export class StructParameter extends Parameter {
     setParamValue(paramName, val) {
         var params = this.state.parameters;
         params[paramName].value = val;
-        params[paramName].included = true;
 
         var value = {};
         for (var param in params) {
