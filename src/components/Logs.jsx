@@ -44,7 +44,7 @@ class Log extends React.PureComponent {
     }
 }
 
-export default class Logs extends React.PureComponent {
+export default class Logs extends React.Component {
     static propTypes = {
         logs: PropTypes.array,
         logFilterString: PropTypes.string,
@@ -121,7 +121,7 @@ export default class Logs extends React.PureComponent {
         return (
             <LogScroll maxViewableItems={100} scrollSensitivity={20}>
                 {filteredLogs.map(log => 
-                    (<Log id={log.id} log={log.log} name={log.name} primaryColor={log.primaryColor} secondaryColor={log.secondaryColor} />)
+                    (<Log id={log.id} key={log.id} log={log.log} name={log.name} primaryColor={log.primaryColor} secondaryColor={log.secondaryColor} />)
                 )}
             </LogScroll>
         );
