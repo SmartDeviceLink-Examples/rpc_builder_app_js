@@ -8,6 +8,7 @@ export default class FavRpcs extends React.Component {
 
         this.importSavedRpcs = this.importSavedRpcs.bind(this);
         this.importFinished = this.importFinished.bind(this);
+        this.deleteSavedRpc = this.deleteSavedRpc.bind(this);
 
         var savedRpcList = [];
         var savedRpcs = localStorage.getItem('savedRpcs');
@@ -44,6 +45,23 @@ export default class FavRpcs extends React.Component {
         link.click();
     }
 
+    deleteSavedRpc(rpc) {
+        if (window.confirm(`Are you sure you want to delete your saved ${rpc.rpc} named ${rpc.name}?`)) {
+            var savedRpcs = localStorage.getItem('savedRpcs');
+            var json = JSON.parse(savedRpcs);
+        
+            for (var i = 0; i < json.length; ++i) {
+                if (json[i].name === rpc.name) {
+                    json.splice(i, 1);
+                    var jsonStr = JSON.stringify(json, null, 4);
+                    localStorage.setItem('savedRpcs', jsonStr);
+                    this.setState({ savedRpcs: json });
+                    return;
+                }
+            }
+        }
+    }
+
     clickLoad() {
         var input = document.createElement("input");
         input.setAttribute("type", "file");
@@ -68,9 +86,9 @@ export default class FavRpcs extends React.Component {
                             Save
                     </button>
             </div>
-            <div class="fav_rpcs">
+            <div className="fav_rpcs">
                 { this.state.savedRpcs.map(rpc => 
-                    <FavRpcOption rpc={rpc} handleClick={() => that.props.loadSavedRpc(rpc)} />
+                    <FavRpcOption key={rpc.name} rpc={rpc} loadSaved={() => that.props.loadSavedRpc(rpc)} deleteSavedRpc={() => this.deleteSavedRpc(rpc)}/>
                 )}
             </div>
         </div>);
