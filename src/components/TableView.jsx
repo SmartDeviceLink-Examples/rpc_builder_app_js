@@ -35,10 +35,10 @@ export class TableView extends React.PureComponent {
     render() {
         const { active, children, className = '' } = this.props;
         const activeItem = this.props.children.find(child => child.props.id === active);
-        const childrenWithProps = React.Children.map(children, child => React.cloneElement(child, {
+        const childrenWithProps = React.Children.map(children, child => child.props.tableId ? React.cloneElement(child, {
             active: child.props.id === active,
             tabable: !this.state.isShifted
-        }));
+        }) : child);
 
         var tableViewHeightStyle = { 'height': '100%' };
 
