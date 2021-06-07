@@ -161,8 +161,8 @@ export default class MenuBar extends React.Component {
                     <TableViewHeader key="recent-header" label="Recently Used RPCs"/>
                     <div className="fav_rpcs">
                     {
-                        this.state.recentRpcs.map(rpc => (
-                            <RecentRpcOption rpc={rpc} handleClick={(rpc) => that.loadSavedRpc(rpc)} />
+                        this.state.recentRpcs.map((rpc, i) => (
+                            <RecentRpcOption key={i} rpc={rpc} handleClick={(rpc) => that.loadSavedRpc(rpc)} />
                         ))
                     }
                     </div>
