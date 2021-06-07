@@ -167,7 +167,7 @@ export default class RpcConfig extends React.Component {
 
     render() {
         let selectContent = [ <span key="select" className="mt2 fw5 ph2">Select RPC</span>,
-                <Select onSelect={this.rpcSelected} selected={this.state.selectedRpcName}
+                <Select key="rpcSelect" onSelect={this.rpcSelected} selected={this.state.selectedRpcName}
                     options={Object.keys(document.apiSpec.functions).sort().map(f => {
                         return { value: f };
                     })} className=" ph2"/> ];
