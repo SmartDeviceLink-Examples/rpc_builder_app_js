@@ -79,7 +79,7 @@ export class BoolParameter extends Parameter {
         this.toggle = this.toggle.bind(this);
 
         this.state = {
-            value: false
+            value: props.value ?? false
         }
     }
 
