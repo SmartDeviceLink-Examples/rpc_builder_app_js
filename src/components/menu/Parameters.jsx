@@ -446,7 +446,14 @@ export class ArrayParameter extends Parameter {
     setIncluded(id, included) {
         var params = this.state.parameters;
         params[id].included = included;
-        this.setState({ parameters: params });
+
+        var values = [];
+        for (var param in params) {
+            if (params[param].included) { values.push(params[param].value) };
+        }
+
+        this.setState({ parameters: params, value: values });
+        this.props.setValue(values);
     }
 
     setParamValue(id, value) {
