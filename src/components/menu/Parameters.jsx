@@ -6,56 +6,56 @@ import Select from '../Select';
 export function api2html(that, param, value = undefined) {
     if (param.array === 'true') {
         return (<ArrayParameter param={param} included={that.state.parameters[param.name].included}
-            value={value}
+            value={value} key={param.name}
             setIncluded={(included) => that.setIncluded(param.name, included)} 
             setValue={(val) => that.setParamValue(param.name, val)} />);
     }
     else if (param.type === 'Boolean') {
         return (<BoolParameter param={param} included={that.state.parameters[param.name].included}
-            value={value}
+            value={value} key={param.name}
             setIncluded={(included) => that.setIncluded(param.name, included)}
             setValue={(val) => that.setParamValue(param.name, val)} />);
     }
     else if (param.type === 'Integer') {
         return (<IntParameter param={param} included={that.state.parameters[param.name].included}
-            value={value} parse={parseInt}
+            value={value} parse={parseInt} key={param.name}
             setIncluded={(included) => that.setIncluded(param.name, included)}
             setValue={(val) => that.setParamValue(param.name, val)} />);
     }
     else if (param.type === 'Float') {
         return (<IntParameter param={param} included={that.state.parameters[param.name].included}
-            value={value} parse={parseFloat}
+            value={value} parse={parseFloat} key={param.name}
             setIncluded={(included) => that.setIncluded(param.name, included)}
             setValue={(val) => that.setParamValue(param.name, val)} />);
     }
     else if (param.type === 'String') {
         return (<StringParameter param={param} included={that.state.parameters[param.name].included}
-            value={value}
+            value={value} key={param.name}
             setIncluded={(included) => that.setIncluded(param.name, included)}
             setValue={(val) => that.setParamValue(param.name, val)} />);
     }
     else if (param.type === 'Image') {
         return (<ImageParameter param={param} included={that.state.parameters[param.name].included}
-            value={value}
+            value={value} key={param.name}
             setIncluded={(included) => that.setIncluded(param.name, included)}
             setValue={(val) => that.setParamValue(param.name, val)} />);
     }
     else if (param.type in document.apiSpec.enums) {
         return (<EnumParameter param={param} included={that.state.parameters[param.name].included}
-            value={value}
+            value={value} key={param.name}
             setIncluded={(included) => that.setIncluded(param.name, included)}
             setValue={(val) => that.setParamValue(param.name, val)} />);
     }
     else if (param.type in document.apiSpec.structs) {
         return (<StructParameter param={param} included={that.state.parameters[param.name].included}
-            value={value}
+            value={value} key={param.name}
             setIncluded={(included) => that.setIncluded(param.name, included)}
             setValue={(val) => that.setParamValue(param.name, val)} />);
     }
 
     if (param.name === 'bulkData') {
         return (<FileParameter param={param} included={that.state.parameters[param.name].included}
-            value={value}
+            value={value} key={param.name}
             setIncluded={(included) => that.setIncluded(param.name, included)}
             setValue={(val) => that.setParamValue(param.name, val)} />);
     }
