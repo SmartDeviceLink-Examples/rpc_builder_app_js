@@ -208,13 +208,26 @@ export default class AppConfig extends React.Component {
                         }), 5);
                     }
                 }
+            } else if (message._functionName === 'OnHMIStatus') {
+                console.log('OnHMIStatus params', message._parameters);
+                var level = message._parameters.hmiLevel;
+                if ('FULL' === level) {
+                    this.props.setStatusColor('#22d10a');
+                } else if ('LIMITED' === level) {
+                    this.props.setStatusColor('#ebb609');
+                } else if ('BACKGROUND' === level) {
+                    this.props.setStatusColor('#eb770c');
+                } else if ('NONE' === level) {
+                    this.props.setStatusColor('#bbcccc');
+                }
+
             }
             return recvFunc.call(document.sdlManager._lifecycleManager, message);
         };
 
         localStorage.setItem('lastAppState', JSON.stringify(this.state));
 
-        this.props.onConnect();
+        this.props.onConnect(this.state.appName);
     }
 
     render() {

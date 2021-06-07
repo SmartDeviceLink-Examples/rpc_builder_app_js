@@ -110,9 +110,10 @@ export default class MenuBar extends React.Component {
         this.setState({ tableView: itemId });
     }
 
-    onConnect() {
+    onConnect(appName) {
         this.setTableViewActive('mb-table', null);
         this.setState({ appConnected: true });
+        this.props.setAppName(appName);
     }
 
     render() {
@@ -134,7 +135,7 @@ export default class MenuBar extends React.Component {
                         label="Configure Application"
                         className="ph3"
                     >
-                        <AppConfig onConnect={this.onConnect} rpcVersion={this.state.rpcVersion} />
+                        <AppConfig onConnect={this.onConnect} rpcVersion={this.state.rpcVersion} setStatusColor={this.props.setStatusColor} />
                     </TableViewItem>
                     <TableViewItem
                         onClick={this.setTableViewActive}

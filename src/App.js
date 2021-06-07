@@ -16,6 +16,8 @@ export default class App extends React.Component {
     this.onFilterChange = this.onFilterChange.bind(this);
 
     this.state = {
+      headerText: 'Connecting...',
+      headerStatusColor: '#bbcccc',
       logRef: React.createRef(),
       logFilterString: undefined
     }
@@ -30,9 +32,10 @@ export default class App extends React.Component {
   }
 
   render() {
+    var that = this;
     return (
       <div className="App">
-        <AppHeader/>
+        <AppHeader headerText={this.state.headerText} headerStatusColor={this.state.headerStatusColor}/>
         <div className="flex-sidebyside">
           <Pane
             clearLogs={ this.clearLogs }
@@ -43,7 +46,7 @@ export default class App extends React.Component {
               <Logs ref={this.state.logRef} logFilterString={this.state.logFilterString}/>
           </Pane>
           <Pane className="mainPane menuPane">
-            <MenuBar connected hmiStatus='FULL'/>
+            <MenuBar setAppName={(name) => { that.setState({ headerText: name }); }} setStatusColor={(color) => { that.setState({ headerStatusColor: color }); }} />
           </Pane>
         </div>
       </div>
