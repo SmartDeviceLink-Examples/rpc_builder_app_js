@@ -216,6 +216,7 @@ export class EnumParameter extends Parameter {
     }
 
     set(e) {
+        this.props.setIncluded(true);
         this.props.setValue(e.value);
     }
 
