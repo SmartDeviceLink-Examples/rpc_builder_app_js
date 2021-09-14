@@ -231,7 +231,7 @@ export class EnumParameter extends Parameter {
                     <span key="save" className="param_name">{this.props.param.name}</span>
                 </div>
                 <Select onSelect={this.set} className="__enum"
-                    selected={this.props.value ? this.props.value : this.state.map[0]} options={this.state.map} />
+                    selected={this.props.value ? this.props.value : this.state.map[0].value} options={this.state.map} />
             </div>);
     }
 }
