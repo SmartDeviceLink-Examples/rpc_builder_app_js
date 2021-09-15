@@ -126,7 +126,10 @@ export default class AppConfig extends React.Component {
         // allow sending of RPCs that don't follow the spec
         // todo add warning confirm dialog if RPC doesn't conform to spec
         document.validateType = document.SDL.rpc.RpcStruct._validateType;
-        document.SDL.rpc.RpcStruct._validateType = function() { return true; }
+        document.SDL.rpc.RpcStruct._validateType = function(x, y) {
+            //document.validateType(x, y);
+            return true;
+        }
 
         // log outgoing RPCs
         const sendFunc = document.sdlManager._lifecycleManager.sendRpcMessage;
@@ -209,7 +212,6 @@ export default class AppConfig extends React.Component {
                     }
                 }
             } else if (message._functionName === 'OnHMIStatus') {
-                console.log('OnHMIStatus params', message._parameters);
                 var level = message._parameters.hmiLevel;
                 if ('FULL' === level) {
                     this.props.setStatusColor('#22d10a');
@@ -220,7 +222,6 @@ export default class AppConfig extends React.Component {
                 } else if ('NONE' === level) {
                     this.props.setStatusColor('#bbcccc');
                 }
-
             }
             return recvFunc.call(document.sdlManager._lifecycleManager, message);
         };
@@ -228,6 +229,14 @@ export default class AppConfig extends React.Component {
         localStorage.setItem('lastAppState', JSON.stringify(this.state));
 
         this.props.onConnect(this.state.appName);
+
+        // scripting method
+        document.send = function(name, params, bulkData) {
+            const rpc = new document.SDL.rpc.messages[name]({ parameters: params });
+            if (bulkData) { rpc.setBulkData(bulkData); }
+            document.sdlManager.sendRpc(rpc);
+            document.addRecentRpc(name, params);
+        }
     }
 
     render() {

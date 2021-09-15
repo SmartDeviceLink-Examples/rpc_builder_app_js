@@ -17,6 +17,7 @@ export default class MenuBar extends React.Component {
         this.loadSavedRpc = this.loadSavedRpc.bind(this);
         this.resetSavedRpc = this.resetSavedRpc.bind(this);
         this.addRecentRpc = this.addRecentRpc.bind(this);
+        document.addRecentRpc = this.addRecentRpc.bind(this);
 
         this.state = {
             tableView: null,
