@@ -193,7 +193,7 @@ export default class AppConfig extends React.Component {
                                 } else {
                                     console.warn('PTU URL returned bad status code', res.status, res.statusText);
                                 }
-                            });
+                            }).catch((err) => console.warn('failed to fetch PTU', err));
                         }, 5);
                     } else if (message._parameters.requestType === document.SDL.rpc.enums.RequestType.ICON_URL
                         && 'HTTP' === message._parameters.fileType) {
